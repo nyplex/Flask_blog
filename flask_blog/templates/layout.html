@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ url_for('static', filename='bundle.css') }}">
     <title>
-        {% if title %}
-        {{ title }}
+        {% if page_title %}
+        {{ page_title }}
         {% else %}
         FlaskBlog
         {% endif %}
@@ -91,39 +91,39 @@
                     <li class="w-[95%] md:w-auto">
                         <a href="{{ url_for('home') }}"
                             class="block py-2 pr-4 pl-3 
-                            {% if active == 'home' %}
+                            {% if active_link == 'home' %}
                                 bg-blue-700 md:bg-transparent text-white md:text-blue-700 md:dark:text-white dark:text-white
                             {% else %}
-                                hover:bg-blue-200 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
+                                hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
                             {% endif %}
                             md:p-0 rounded md:rounded-none">Home</a>
                     </li>
                     <!-- New Post Link -->
                     <li class="w-[95%] md:w-auto">
-                        <a href="#"
+                        <a href="{{ url_for('new_post') }}"
                             class="block py-2 pr-4 pl-3 
-                            {% if active == 'new_post' %}
+                            {% if active_link == 'new_post' %}
                             bg-blue-700 md:bg-transparent text-white md:text-blue-700 md:dark:text-white dark:text-white
                             {% else %}
-                            hover:bg-blue-200 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
+                            hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
                             {% endif %}
                             md:p-0 rounded md:rounded-none">New Post</a>
                     </li>
                     <!-- Categories Link -->
                     <li class="w-[95%] md:w-auto">
-                        <a href="#"
+                        <a href="{{ url_for('categories') }}"
                             class="block py-2 pr-4 pl-3
-                            {% if active == 'categories' %}
+                            {% if active_link == 'categories' %}
                             bg-blue-700 md:bg-transparent text-white md:text-blue-700 md:dark:text-white dark:text-white
                             {% else %}
-                            hover:bg-blue-200 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
+                            hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
                             {% endif %}
                             md:p-0 rounded md:rounded-none">Categories</a>
                     </li>
                     <!-- Navbar Search Input -->
                     <li class="w-[95%] md:w-auto">
                         <input type="text" id="email-adress-icon"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2 md:mt-0"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2 md:mt-0"
                             placeholder="Search Posts...">
                     </li>
                 </ul>
