@@ -10,6 +10,8 @@
 <body>
     
     <h1>Flask Blog Home Page</h1>
+    <p>Hello {{ user.fname }} {{ user.lname }}</p>
+    <p>{{ user.image }}</p>
 
     <script src="{{ url_for('static', filename='bundle.js') }}"></script>
 </body>

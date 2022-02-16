@@ -6,4 +6,6 @@ import os
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
+    print(str(user))
+    return render_template("home.html", user=user)
