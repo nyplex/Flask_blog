@@ -19,7 +19,7 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav class="bg-white border-gray-200 border-b-2 px-2 sm:px-4 py-2.5 dark:bg-gray-800 fixed w-full top-0 left-0">
+    <nav class="bg-white md:border-gray-200 md:border-b-2 px-2 sm:px-4 py-2.5 dark:bg-gray-800 fixed w-full top-0 left-0">
         <div class="w-full max-w-7xl flex flex-wrap justify-between items-center mx-auto">
 
             <!-- Navbar LOGO -->
@@ -38,7 +38,7 @@
             </a>
 
             <!-- User Menu -->
-            <div class="flex items-center md:order-2">
+            <div class="flex items-center md:order-2 md:hidden">
                 <!-- User Avatar -->
                 <button type="button"
                     class="hidden mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -58,19 +58,18 @@
                     <ul class="py-1" aria-labelledby="dropdown">
                         <!-- User Profile Link -->
                         <li>
-                            <a href="#"
+                            <a href="{{ url_for('profile') }}"
                                 class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
                         </li>
                         <!-- User Settings Link -->
                         <li>
-                            <a href="#"
+                            <a href="{{ url_for('settings') }}"
                                 class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
                         </li>
                         <!-- User Logout Link -->
                         <li>
-                            <a href="#"
-                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
-                                out</a>
+                            <a href="{{ url_for('logout') }}"
+                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</a>
                         </li>
                     </ul>
                 </div>
@@ -120,12 +119,11 @@
                             {% endif %}
                             md:p-0 rounded md:rounded-none">Categories</a>
                     </li>
-                    <!-- Navbar Search Input -->
-                    <li class="w-[95%] md:w-auto">
-                        <input type="text" id="email-adress-icon"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2 md:mt-0"
-                            placeholder="Search Posts...">
-                    </li>
+                    <div class="flex flex-row mt-4 md:hidden">
+                        <button type="button" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800 mr-2"><a href="{{ url_for('signup') }}">Sign Up</a></button>
+
+                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-2"><a href="{{ url_for('login') }}">Log In</a></button>
+                    </div>
                 </ul>
             </div>
 
@@ -135,14 +133,11 @@
                 <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium items-center">
                     <!-- Signup Link -->
                     <li>
-                        <a href="#"
-                            class="block text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                            aria-current="page">Sign Up</a>
+                        <button type="button" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"><a href="{{ url_for('signup') }}">Sign Up</a></button>
                     </li>
                     <!-- Login Link -->
                     <li>
-                        <a href="#"
-                            class="block text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Log In</a>
+                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><a href="{{ url_for('login') }}">Log In</a></button>
                     </li>
                 </ul>
             </div>

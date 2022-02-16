@@ -12,7 +12,7 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
 
-mongo = PyMongo(app, tls=True, tlsAllowInvalidCertificates=True)
+# mongo = PyMongo(app, tls=True, tlsAllowInvalidCertificates=True)
 # login_manager = LoginManager(app)
 # login_manager.login_view = 'login'
 
