@@ -3,7 +3,5 @@
 @tailwind utilities;
 
 @layer utilities {
-    body {
-        @apply bg-blue-400
-    }
+   
 }
