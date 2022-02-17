@@ -1,6 +1,7 @@
 from re import M
 from flask import redirect, request, render_template, url_for
 from flask_blog import app
+from flask_blog.forms import SignupForm, LoginForm
 import os
 
 
@@ -28,14 +29,22 @@ def categories():
                            page_title="Categories", active_link="categories")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html", title="FlaskBlog Login")
+    form = LoginForm()
+    if form.validate_on_submit():
+        print("valid form")
+    return render_template("login.html", title="FlaskBlog Login",
+                           form=form)
 
 
-@app.route("/signup")
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
-    return render_template("signup.html", title="FlaskBlog Register")
+    form = SignupForm()
+    if form.validate_on_submit():
+        print("valid form")
+    return render_template("signup.html", title="FlaskBlog Register",
+                           form=form)
 
 
 @app.route("/profile")

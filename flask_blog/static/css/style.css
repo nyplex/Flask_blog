@@ -12,6 +12,10 @@
         @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white
     }
 
+    .form-invalid-input {
+        @apply bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400
+    }
+
     .form-checkBox {
         @apply w-4 h-4 bg-gray-50 rounded border border-gray-300  focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800
     }
@@ -20,12 +24,20 @@
         @apply block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300
     }
 
+    .form-invalid-label {
+        @apply block mb-2 text-sm font-medium text-red-700 dark:text-red-500
+    }
+
     .checkBox-label {
         @apply font-medium text-gray-900 dark:text-gray-300
     }
 
+    .form-error-message {
+        @apply mt-2 text-xs mobile:max-w-[175px] text-red-600 dark:text-red-500
+    }
+
     .form-modal {
-        @apply p-4 mobile:mt-12 max-w-md w-[100vw] bg-white md:h-auto mobile:rounded-lg mobile:border mobile:border-gray-200 shadow-md sm:p-6 lg:p-8 dark:bg-gray-900 dark:border-gray-700 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]
+        @apply mx-auto mobile:mb-12 p-4 mobile:mt-24 max-w-md w-[100vw] bg-white md:h-auto mobile:rounded-lg mobile:border mobile:border-gray-200 shadow-md sm:p-6 lg:p-8 dark:bg-gray-900 dark:border-gray-700
     }
 
     .primary-btn {
