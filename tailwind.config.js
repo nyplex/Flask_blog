@@ -6,7 +6,7 @@ module.exports = {
         IBM: ["IBM Plex Sans", "sans-serif"],
       },
       colors: {
-        primary: "#1D3557",
+        darkBg: "#111827",
       }
     },
     screens: {
