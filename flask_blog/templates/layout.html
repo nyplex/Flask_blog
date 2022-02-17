@@ -23,7 +23,7 @@
         <div class="w-full max-w-7xl flex flex-wrap justify-between items-center mx-auto">
 
             <!-- Navbar LOGO -->
-            <a href="{{ url_for('home') }}" class="flex">
+            <a href="{{ url_for('main.home') }}" class="flex">
                 <svg class="mr-3 h-10" viewBox="0 0 52 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M1.87695 53H28.7791C41.5357 53 51.877 42.7025 51.877 30H24.9748C12.2182 30 1.87695 40.2975 1.87695 53Z"
@@ -58,9 +58,9 @@
                     </div>
                     <!-- User Menu Links -->
                     <ul class="py-1" aria-labelledby="dropdown">
-                        <li><a href="{{ url_for('profile') }}" class="user-link">Profile</a></li>
-                        <li><a href="{{ url_for('settings') }}" class="user-link">Settings</a></li>
-                        <li><a href="{{ url_for('logout') }}" class="user-link">Log Out</a></li>
+                        <li><a href="{{ url_for('users.profile') }}" class="user-link">Profile</a></li>
+                        <li><a href="{{ url_for('users.settings') }}" class="user-link">Settings</a></li>
+                        <li><a href="{{ url_for('users.logout') }}" class="user-link">Log Out</a></li>
                     </ul>
                 </div>
 
@@ -78,24 +78,24 @@
                 <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium items-center">
                     <!-- Home Link -->
                     <li class="w-[95%] md:w-auto">
-                        <a href="{{ url_for('home') }}"
+                        <a href="{{ url_for('main.home') }}"
                             class="block py-2 pr-4 pl-3 {{ 'navbar-active-link' if active_link == 'home' else 'navbar-unactive-link' }} md:p-0 rounded md:rounded-none">Home</a>
                     </li>
                     <!-- New Post Link -->
                     <li class="w-[95%] md:w-auto">
-                        <a href="{{ url_for('new_post') }}"
+                        <a href="{{ url_for('posts.new_post') }}"
                             class="block py-2 pr-4 pl-3 {{ 'navbar-active-link' if active_link == 'new_post' else 'navbar-unactive-link' }} md:p-0 rounded md:rounded-none">New Post</a>
                     </li>
                     <!-- Categories Link -->
                     <li class="w-[95%] md:w-auto">
-                        <a href="{{ url_for('categories') }}"
+                        <a href="{{ url_for('posts.categories') }}"
                             class="block py-2 pr-4 pl-3 {{ 'navbar-active-link' if active_link == 'categories' else 'navbar-unactive-link' }} md:p-0 rounded md:rounded-none">Categories</a>
                     </li>
                     <!-- Login/Signup Links only visible on Mobile, in dropdown menu -->
                     <!-- Must be hidden if user is logged in -->
                     <div class="flex flex-row mt-4 md:hidden">
-                        <button type="button" class="primary-btn-inverted font-medium text-sm px-5 py-1 mr-2"><a href="{{ url_for('signup') }}">Sign Up</a></button>
-                        <button type="button" class="primary-btn font-medium text-sm px-5 py-1 ml-2"><a href="{{ url_for('login') }}">Log In</a></button>
+                        <button type="button" class="primary-btn-inverted font-medium text-sm px-5 py-1 mr-2"><a href="{{ url_for('users.signup') }}">Sign Up</a></button>
+                        <button type="button" class="primary-btn font-medium text-sm px-5 py-1 ml-2"><a href="{{ url_for('users.login') }}">Log In</a></button>
                     </div>
                 </ul>
             </div>
@@ -105,10 +105,10 @@
             <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-3" id="mobile-menu-2">
                 <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium items-center">
                     <li>
-                        <button type="button" class="primary-btn-inverted font-medium text-sm px-5 py-1 mr-2"><a href="{{ url_for('signup') }}">Sign Up</a></button>
+                        <button type="button" class="primary-btn-inverted font-medium text-sm px-5 py-1 mr-2"><a href="{{ url_for('users.signup') }}">Sign Up</a></button>
                     </li>
                     <li>
-                        <button type="button" class="primary-btn font-medium text-sm px-5 py-1 ml-2"><a href="{{ url_for('login') }}">Log In</a></button>
+                        <button type="button" class="primary-btn font-medium text-sm px-5 py-1 ml-2"><a href="{{ url_for('users.login') }}">Log In</a></button>
                     </li>
                 </ul>
             </div>
