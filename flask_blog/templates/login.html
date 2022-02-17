@@ -1,29 +1,55 @@
 {% extends "layout.html" %}
 {% block content %}
-    
+
+<!-- Login Form Modal -->
 <div class="form-modal">
     <form class="space-y-6" action="#" method="POST">
+        {{ form.hidden_tag() }}
+
         <h3 class="text-xl font-medium text-gray-900 dark:text-white">Log in to FlaskBlog</h3>
+
+        <!-- Email field -->
         <div>
-            <label for="login_email" class="form-label">Your email</label>
-            <input type="email" name="login_email" id="login_email" class="form-input" placeholder="name@email.com" required>
+            {% if form.email.errors %}
+                {{ form.email.label(class="form-invalid-label") }}
+                {{ form.email(class="form-invalid-input") }}
+                {% for error in form.email.errors %}
+                    <p class="form-error-message"><span class="font-medium">Oops! </span>{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-input") }}
+            {% endif %}
         </div>
+        <!-- Password field -->
         <div>
-            <label for="login_password" class="form-label">Your password</label>
-            <input type="password" name="login_password" id="login_password" placeholder="••••••••" class="form-input" required>
+            {% if form.password.errors %}
+                {{ form.password.label(class="form-invalid-label") }}
+                {{ form.password(class="form-invalid-input") }}
+                {% for error in form.password.errors %}
+                    <p class="form-error-message"><span class="font-medium">Oops! </span>{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input") }}
+            {% endif %}
         </div>
+        <!-- Remeber checkbox  -->
         <div class="flex items-start">
             <div class="flex items-start">
                 <div class="flex items-center h-5">
-                <input id="remember" name="login_remember" aria-describedby="remember" type="checkbox" class="form-checkBox" required>
+                    {{ form.remember(class="form-checkBox") }}
                 </div>
                 <div class="ml-3 text-sm">
-                <label for="remember" class="checkBox-label">Remember me</label>
+                    {{ form.remember.label(class="checkBox-label") }}
                 </div>
             </div>
             <a href="#" class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
         </div>
-        <button type="submit" class="primary-btn w-full font-medium  text-sm px-5 py-2.5">Login to your account</button>
+        <!-- Submit button -->
+        {{ form.submit(class="primary-btn w-full font-medium  text-sm px-5 py-2.5") }}
+
+        <!-- Link to signup -->
         <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
             Not registered? <a href="{{ url_for('signup') }}" class="text-blue-700 hover:underline dark:text-blue-500">Create account</a>
         </div>
