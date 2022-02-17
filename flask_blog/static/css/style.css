@@ -3,5 +3,48 @@
 @tailwind utilities;
 
 @layer utilities {
-   
+
+    
+}
+
+@layer components {
+    .form-input {
+        @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white
+    }
+
+    .form-checkBox {
+        @apply w-4 h-4 bg-gray-50 rounded border border-gray-300  focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800
+    }
+
+    .form-label {
+        @apply block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300
+    }
+
+    .checkBox-label {
+        @apply font-medium text-gray-900 dark:text-gray-300
+    }
+
+    .form-modal {
+        @apply p-4 mobile:mt-12 max-w-md w-[100vw] bg-white md:h-auto mobile:rounded-lg mobile:border mobile:border-gray-200 shadow-md sm:p-6 lg:p-8 dark:bg-gray-900 dark:border-gray-700 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]
+    }
+
+    .primary-btn {
+        @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+    }
+
+    .primary-btn-inverted {
+        @apply text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-lg text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800
+    }
+
+    .user-link {
+        @apply block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white
+    }
+
+    .navbar-active-link {
+        @apply bg-blue-700 md:bg-transparent text-white md:text-blue-700 md:dark:text-white dark:text-white
+    }
+
+    .navbar-unactive-link {
+        @apply hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
+    }
 }
