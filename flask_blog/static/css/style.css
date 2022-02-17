@@ -60,3 +60,9 @@
         @apply hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
     }
 }
+
+
+
+.form-valid-input {
+    @apply bg-green-50 border border-green-500 text-green-900 placeholder-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-green-100 dark:border-green-400
+}
