@@ -19,7 +19,7 @@
 <body class="bg-white dark:bg-darkBg">
 
     <!-- NAVBAR -->
-    <nav class="bg-white md:border-gray-200 md:border-b-2 dark:border-none px-2 sm:px-4 py-2.5 dark:bg-gray-800 fixed w-full top-0 left-0">
+    <nav class="bg-white md:border-gray-200 md:border-b-2 dark:border-none px-2 sm:px-4 py-2.5 dark:bg-gray-800 fixed w-full top-0 left-0 z-50">
         <div class="w-full max-w-7xl flex flex-wrap justify-between items-center mx-auto">
 
             <!-- Navbar LOGO -->
@@ -59,17 +59,17 @@
                         <!-- User Profile Link -->
                         <li>
                             <a href="{{ url_for('profile') }}"
-                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+                                class="user-link">Profile</a>
                         </li>
                         <!-- User Settings Link -->
                         <li>
                             <a href="{{ url_for('settings') }}"
-                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+                                class="user-link">Settings</a>
                         </li>
                         <!-- User Logout Link -->
                         <li>
                             <a href="{{ url_for('logout') }}"
-                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-blue-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</a>
+                                class="user-link">Log Out</a>
                         </li>
                     </ul>
                 </div>
@@ -89,40 +89,22 @@
                     <!-- Home Link -->
                     <li class="w-[95%] md:w-auto">
                         <a href="{{ url_for('home') }}"
-                            class="block py-2 pr-4 pl-3 
-                            {% if active_link == 'home' %}
-                                bg-blue-700 md:bg-transparent text-white md:text-blue-700 md:dark:text-white dark:text-white
-                            {% else %}
-                                hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
-                            {% endif %}
-                            md:p-0 rounded md:rounded-none">Home</a>
+                            class="block py-2 pr-4 pl-3 {{ 'navbar-active-link' if active_link == 'home' else 'navbar-unactive-link' }} md:p-0 rounded md:rounded-none">Home</a>
                     </li>
                     <!-- New Post Link -->
                     <li class="w-[95%] md:w-auto">
                         <a href="{{ url_for('new_post') }}"
-                            class="block py-2 pr-4 pl-3 
-                            {% if active_link == 'new_post' %}
-                            bg-blue-700 md:bg-transparent text-white md:text-blue-700 md:dark:text-white dark:text-white
-                            {% else %}
-                            hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
-                            {% endif %}
-                            md:p-0 rounded md:rounded-none">New Post</a>
+                            class="block py-2 pr-4 pl-3 {{ 'navbar-active-link' if active_link == 'new_post' else 'navbar-unactive-link' }} md:p-0 rounded md:rounded-none">New Post</a>
                     </li>
                     <!-- Categories Link -->
                     <li class="w-[95%] md:w-auto">
                         <a href="{{ url_for('categories') }}"
-                            class="block py-2 pr-4 pl-3
-                            {% if active_link == 'categories' %}
-                            bg-blue-700 md:bg-transparent text-white md:text-blue-700 md:dark:text-white dark:text-white
-                            {% else %}
-                            hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
-                            {% endif %}
-                            md:p-0 rounded md:rounded-none">Categories</a>
+                            class="block py-2 pr-4 pl-3 {{ 'navbar-active-link' if active_link == 'categories' else 'navbar-unactive-link' }} md:p-0 rounded md:rounded-none">Categories</a>
                     </li>
                     <div class="flex flex-row mt-4 md:hidden">
-                        <button type="button" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800 mr-2"><a href="{{ url_for('signup') }}">Sign Up</a></button>
+                        <button type="button" class="primary-btn-inverted font-medium text-sm px-5 py-1 mr-2"><a href="{{ url_for('signup') }}">Sign Up</a></button>
 
-                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-2"><a href="{{ url_for('login') }}">Log In</a></button>
+                        <button type="button" class="primary-btn font-medium text-sm px-5 py-1 ml-2"><a href="{{ url_for('login') }}">Log In</a></button>
                     </div>
                 </ul>
             </div>
@@ -133,11 +115,11 @@
                 <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium items-center">
                     <!-- Signup Link -->
                     <li>
-                        <button type="button" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"><a href="{{ url_for('signup') }}">Sign Up</a></button>
+                        <button type="button" class="primary-btn-inverted font-medium text-sm px-5 py-1 mr-2"><a href="{{ url_for('signup') }}">Sign Up</a></button>
                     </li>
                     <!-- Login Link -->
                     <li>
-                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><a href="{{ url_for('login') }}">Log In</a></button>
+                        <button type="button" class="primary-btn font-medium text-sm px-5 py-1 ml-2"><a href="{{ url_for('login') }}">Log In</a></button>
                     </li>
                 </ul>
             </div>
