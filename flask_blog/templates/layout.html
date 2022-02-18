@@ -52,9 +52,11 @@
                     id="dropdown">
                     <!-- User Menu Personnal Info -->
                     <div class="py-3 px-4">
-                        <span class="block text-sm text-gray-900 dark:text-white">John Doe</span>
+                        <span class="block text-sm text-gray-900 dark:text-white">
+                            {{ current_user.fname|capitalize }} {{ current_user.lname|capitalize }}
+                        </span>
                         <span
-                            class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">john.doe@gmail.com</span>
+                            class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ current_user.email }}</span>
                     </div>
                     <!-- User Menu Links -->
                     <ul class="py-1" aria-labelledby="dropdown">
