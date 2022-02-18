@@ -118,6 +118,21 @@
 
 
     <main class="mt-20">
+            <!-- Display the flash message just below the navbar -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{{ category }}" role="alert" id="flash_message">
+                            <span>{{ message }}</span>
+                            <button type="button" class="{{ category }}-btn" aria-label="Close" id="flash_message_btn">
+                                <span class="sr-only">Close</span><i class="fa-solid fa-xmark text-xl text-center"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+        <!-- Display main content -->
         {% block content %}
         {% endblock content %}
     </main>

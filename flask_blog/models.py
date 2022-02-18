@@ -3,8 +3,8 @@ from model.pymongo_model import SimpleModel
 
 
 @login_manager.user_loader
-def load_user(id):
-    user = mongo.db.users.find_one({"_id": id})
+def load_user(email):
+    user = mongo.db.users.find_one({"email": email})
     if user:
         return User(user)
     return None

@@ -1,3 +1,4 @@
+from flask import flash
 from flask_blog import mongo
 from model.pymongo_model import SimpleModel
 from flask_wtf import FlaskForm
@@ -66,8 +67,7 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField("Login to your account")
 
-    # def validate_email(self, email):
-    #     check if email exists in DB
-
-    # def validate_password(self, password):
-    #     check if password match with DB using email
+    def validate_email(self, email):
+        user = mongo.db.users.find_one({"email": email.data})
+        if not user:
+            flash("Wrong email and/or password", "flash-danger")
