@@ -1,8 +1,10 @@
-from flask import Blueprint, current_app
-from re import M
-from flask import redirect, request, render_template, url_for
+from flask_blog import mongo, bcrypt
+from flask import Blueprint, current_app, redirect, request, render_template, url_for
 from flask_blog.users.forms import SignupForm, LoginForm
-import os
+from flask_blog.models import User
+from datetime import datetime
+from bson.objectid import ObjectId
+from flask_blog.users.utils import create_username
 
 users = Blueprint("users", __name__)
 
@@ -19,11 +21,25 @@ def login():
 @users.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
+    user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
     if form.validate_on_submit():
-        print("valid form")
+        ####### store data in lower case ########
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data).decode('utf-8')
+        newUser = User({
+            "fname": form.fname.data,
+            "lname": form.lname.data,
+            "email": form.email.data,
+            "username": create_username(form.fname.data, form.lname.data),
+            "password": hashed_password,
+            "image": "default.jpg",
+            "signup_date": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        })
+        newUser.save()
+        return redirect(url_for("main.home"))
     return render_template("signup.html", title="FlaskBlog Register",
-                           form=form)
-    
+                           form=form, user=user)
+
 
 @users.route("/logout")
 def logout():

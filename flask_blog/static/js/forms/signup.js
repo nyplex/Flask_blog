@@ -34,19 +34,14 @@ $("#fname, #lname, #email, #confirm_email, #password, #confirm_password").on("in
             }, signupValidator)
             break;
         case "confirm_password":
-            check = validate({
-                password: $("#password").val(),
-                confirm_password: $(e.target).val()
-            }, signupValidator)
+            check = validate({"original_password": $("#password").val(),confirm_password: $(e.target).val()}, signupValidator)
             break;
         default:
             break;
     }
     if (check) {
         $(e.target).removeClass("form-input form-valid-input").addClass("form-invalid-input")
-        console.log(check);
     } else {
         $(e.target).removeClass("form-input form-invalid-input").addClass("form-valid-input")
-        console.log("valid input");
     }
 })
