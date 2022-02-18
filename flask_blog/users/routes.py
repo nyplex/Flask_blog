@@ -23,14 +23,16 @@ def signup():
     form = SignupForm()
     user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
     if form.validate_on_submit():
-        ####### store data in lower case ########
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
+        fname = str(form.fname.data).lower()
+        lname = str(form.lname.data).lower()
+        username = create_username(fname, lname)
         newUser = User({
-            "fname": form.fname.data,
-            "lname": form.lname.data,
+            "fname": fname,
+            "lname": lname,
             "email": form.email.data,
-            "username": create_username(form.fname.data, form.lname.data),
+            "username": username,
             "password": hashed_password,
             "image": "default.jpg",
             "signup_date": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
