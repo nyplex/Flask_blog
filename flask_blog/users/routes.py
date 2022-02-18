@@ -3,7 +3,6 @@ from flask import Blueprint, current_app, redirect, request, render_template, ur
 from flask_blog.users.forms import SignupForm, LoginForm
 from flask_blog.models import User
 from datetime import datetime
-from bson.objectid import ObjectId
 from flask_blog.users.utils import create_username
 from flask_login import login_user, current_user, login_required, logout_user
 
