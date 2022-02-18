@@ -1,7 +1,9 @@
-from flask import Blueprint
-from re import M
+from flask import Blueprint, current_app
+from flask_blog import mongo
 from flask import redirect, request, render_template, url_for
+from flask_login import login_user, current_user, logout_user, login_required, LoginManager
 import os
+from flask_blog.models import User
 
 main = Blueprint("main", __name__)
 
@@ -9,10 +11,5 @@ main = Blueprint("main", __name__)
 @main.route("/")
 @main.route("/home")
 def home():
-    # user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
-    user = {
-        "fname": "Alex",
-        "lname": "doe"
-    }
-    return render_template("home.html", user=user,
+    return render_template("home.html",
                            page_title="Home Page", active_link="home")

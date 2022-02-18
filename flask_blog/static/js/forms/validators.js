@@ -31,6 +31,6 @@ export let signupValidator = {
         }
     },
     confirm_password: {
-        equality: "password"
+        equality: "original_password"
     }
 }
