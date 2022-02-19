@@ -1,10 +1,10 @@
 from flask_blog import mongo, bcrypt
 from flask import Blueprint, current_app, redirect, request, render_template, url_for, flash
-from flask_blog.users.forms import SignupForm, LoginForm
+from flask_blog.users.forms import SignupForm, LoginForm, SettingsForm
 from flask_blog.models import User
 from datetime import datetime
-from flask_blog.users.utils import create_username
-from flask_login import login_user, current_user, login_required, logout_user
+from flask_blog.users.utils import create_username, validate_settings
+from flask_login import login_user, current_user, logout_user
 
 users = Blueprint("users", __name__)
 
@@ -14,7 +14,7 @@ def login():
     form = LoginForm()
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
-    
+
     if form.validate_on_submit():
         # Find the using in the DB
         user = mongo.db.users.find_one({"email": form.email.data})
@@ -35,6 +35,8 @@ def login():
 @users.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
     user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(
@@ -72,11 +74,9 @@ def logout():
     return redirect(url_for("users.login"))
 
 
-@users.route("/profile")
+@users.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html", title="Profile")
-
-
-@users.route("/settings")
-def settings():
-    return render_template("settings.html", title="Your Settings")
+    settingsForm = SettingsForm()
+    if settingsForm.validate_on_submit():
+        validate_settings(settingsForm)
+    return render_template("profile.html", title="Profile", settingsForm=settingsForm)

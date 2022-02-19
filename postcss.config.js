@@ -4,7 +4,7 @@ module.exports = {
       browsers: 'last 7 versions',
       stage: 0,
     },
-    //'cssnano': {},
+    //'cssnano': {}, //uncomment on production
     tailwindcss: {},
     autoprefixer: {},
   },

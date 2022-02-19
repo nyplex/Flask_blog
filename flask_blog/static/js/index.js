@@ -1,9 +1,16 @@
 import "../css/style.css"
 import "flowbite"
-import "./forms/signup"
+import "./forms/forms"
+import "./forms/settings"
 
 
-//Make the flash message disapering after 2sec
+//Close the flash message when user click on the cls btn
 $("#flash_message_btn").on("click", (e) => {
     $("#flash_message").hide()
 })
+//if flash message exists, close it after 5sec
+if($("#flash_message").length) {
+    setTimeout(() => {
+        $("#flash_message").animate({opacity: 0}, 2000)
+    }, 5000)
+}
