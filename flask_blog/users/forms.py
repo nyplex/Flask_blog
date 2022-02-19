@@ -1,7 +1,7 @@
 from flask import flash
 from flask_blog import mongo
-from model.pymongo_model import SimpleModel
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 import re
@@ -38,11 +38,13 @@ class SignupForm(FlaskForm):
 
     submit = SubmitField("Create your account")
 
+
     def validate_email(self, email):
         user = mongo.db.users.find_one({"email": email.data})
         if user:
             raise ValidationError(
                 'This email already exists in our database.')
+
 
     def validate_password(self, password):
         regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,40}$"
@@ -71,3 +73,25 @@ class LoginForm(FlaskForm):
         user = mongo.db.users.find_one({"email": email.data})
         if not user:
             flash("Wrong email and/or password", "flash-danger")
+
+
+class SettingsForm(FlaskForm):
+
+    profile_pic = FileField("Update your avatar", validators=[
+        FileAllowed(["jpg", "jpeg", "png"])])
+
+    fname = StringField("Change your first name")
+
+    lname = StringField("Change your Last name")
+
+    username = StringField("Change your username")
+
+    password = PasswordField("Your password", render_kw={
+                             "placeholder": "••••••••"})
+
+    confirm_password = PasswordField("Confirm your password", render_kw={
+                                     "placeholder": "••••••••"})
+
+    submit = SubmitField("Update profile")
+
+    # Add custom validator for fname lname etc. check if value != "" and then check length .
