@@ -1,6 +1,6 @@
 {% if current_user.is_authenticated %}
 <aside class="hidden w-full mobile:w-auto absolute top-[61px] right-0 z-40 max-h-[100vh] content-area overflow-y-scroll scrollbar" aria-label="Sidebar" id="settings_sidebar">
-    <div class="px-6 py-4 overflow-y-auto rounded-bl bg-gray-200 dark:bg-gray-800 border-gray-400 border-l-2 border-b-2 shadow-md">
+    <div class="px-6 mobile:py-4 py-2 overflow-y-auto rounded-bl bg-gray-50 dark:bg-gray-800 border-gray-200 border-l-2 border-b-2 shadow-md">
         <!-- Form Title -->
         <ul class="space-y-2">
             <li class="flex items-center flex-row p-2 text-gray-900 dark:text-white justify-between">
@@ -12,7 +12,7 @@
         <!-- Settings Form -->
         <form action="" method="POST" enctype="multipart/form-data" id="settings_form">
             {{ settingsForm.hidden_tag() }}
-            <ul class="pt-4 mt-4 space-y-4 border-t border-gray-200 dark:border-gray-700 w-[280px] max-w-[280px]">
+            <ul class="pt-4 mt-4 mx-auto space-y-4 border-t border-gray-200 dark:border-gray-700 w-[250px] max-w-[250px]">
                 <!-- Profile Picure Field -->
                 <li>
                     {% if settingsForm.profile_pic.errors %}

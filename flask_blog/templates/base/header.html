@@ -1,4 +1,4 @@
-<nav class="bg-gray-200 border-gray-400 border-b-2 dark:border-b-1 px-2 sm:px-4 py-2.5 dark:bg-gray-800 fixed w-full top-0 left-0 z-50">
+<nav class="bg-gray-50 border-gray-200 border-b-2 dark:border-b-1 px-2 sm:px-4 py-2.5 dark:bg-gray-800 fixed w-full top-0 left-0 z-50">
         <div class="w-full max-w-7xl flex flex-wrap justify-between items-center mx-auto">
 
             <!-- Navbar LOGO -->
@@ -20,11 +20,14 @@
             <div class="flex items-center md:order-4 {% if not current_user.is_authenticated %} md:hidden {% endif %}">
                 <!-- User Avatar -->
                 <button type="button"
-                    class="{% if not current_user.is_authenticated %} hidden {% endif %} mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                    class="pr-2 {% if not current_user.is_authenticated %} hidden {% endif %} mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 bg-transparent"
                     id="user-menu-button" aria-expanded="false" type="button" data-dropdown-toggle="dropdown">
                     <span class="sr-only">Open user menu</span>
                     {% if current_user.is_authenticated %}
-                        <img class="w-8 h-8 rounded-full" src="{{ url_for('static', filename='media/profile_pics/' + current_user.image) }}" alt="User Avatar">
+                        <div class="flex flex-row items-center justify-around">
+                            <img class="w-8 h-8 rounded-full" src="{{ url_for('static', filename='media/profile_pics/' + current_user.image) }}" alt="User Avatar">
+                            <span class="text-gray-700 dark:text-white ml-2 text-sm font-medium hidden mobile:block">{{ current_user.username }}</span>
+                        </div>
                     {% endif %}
                 </button>
 

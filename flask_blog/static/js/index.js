@@ -11,6 +11,6 @@ $("#flash_message_btn").on("click", (e) => {
 //if flash message exists, close it after 5sec
 if($("#flash_message").length) {
     setTimeout(() => {
-        $("#flash_message").animate({opacity: 0}, 2000)
+        $("#flash_message").animate({opacity: 0}, 1000)
     }, 5000)
 }
