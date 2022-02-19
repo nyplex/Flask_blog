@@ -1,5 +1,6 @@
 from flask import flash
 from flask_blog import mongo
+from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
@@ -103,7 +104,7 @@ class SettingsForm(FlaskForm):
             if " " in username.data:
                 raise ValidationError(
                     'Your username can NOT have any white space')
-            if existing_user:
+            if existing_user and existing_user["username"] != current_user["username"]:
                 raise ValidationError(
                     'This username is already taken')
             if len(value) < 2 or len(value) > 15:

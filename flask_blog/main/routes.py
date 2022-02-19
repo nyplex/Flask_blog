@@ -1,9 +1,9 @@
 from flask import Blueprint, current_app
 from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
+from flask_blog.users.utils import validate_settings
 from flask import redirect, request, render_template, url_for
 from flask_login import login_user, current_user, logout_user, login_required, LoginManager
-from flask_blog.utils import validate_settings
 
 main = Blueprint("main", __name__)
 

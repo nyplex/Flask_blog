@@ -23,8 +23,9 @@
                     class="{% if not current_user.is_authenticated %} hidden {% endif %} mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                     id="user-menu-button" aria-expanded="false" type="button" data-dropdown-toggle="dropdown">
                     <span class="sr-only">Open user menu</span>
-                    <img class="w-8 h-8 rounded-full"
-                        src="{{ url_for('static', filename='media/profile_pics/default.jpg') }}" alt="">
+                    {% if current_user.is_authenticated %}
+                        <img class="w-8 h-8 rounded-full" src="{{ url_for('static', filename='media/profile_pics/' + current_user.image) }}" alt="User Avatar">
+                    {% endif %}
                 </button>
 
                 <!-- Dropdown User Menu -->

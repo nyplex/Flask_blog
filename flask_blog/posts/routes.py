@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import redirect, request, render_template, url_for
 from flask_blog.users.forms import SettingsForm
-from flask_blog.utils import validate_settings
+from flask_blog.users.utils import validate_settings
 
 
 posts = Blueprint("posts", __name__)
