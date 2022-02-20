@@ -9,9 +9,11 @@ posts = Blueprint("posts", __name__)
 
 @posts.route("/new-post", methods=["GET", "POST"])
 def new_post():
+    ##########################################
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
+    ##########################################
     return render_template("new_post.html",
                            page_title="New Post", active_link="new_post", 
                            settingsForm=settingsForm)
@@ -19,9 +21,20 @@ def new_post():
 
 @posts.route("/categories", methods=["GET", "POST"])
 def categories():
+    ##########################################
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
+    ##########################################
     return render_template("categories.html",
                            page_title="Categories", active_link="categories", 
                            settingsForm=settingsForm)
+
+
+@posts.route("/posts/<post_id>")
+def single_post():
+    ##########################################
+    settingsForm = SettingsForm()
+    if settingsForm.validate_on_submit():
+        validate_settings(settingsForm)
+    ##########################################

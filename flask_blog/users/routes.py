@@ -37,7 +37,7 @@ def signup():
     form = SignupForm()
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
-    user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
+    # user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
@@ -46,7 +46,7 @@ def signup():
         lname = str(form.lname.data).lower()
         username = create_username(fname, lname)
 
-        # Create new User to store in DB
+        # Create new User object using the data provided by user
         newUser = User({
             "fname": fname,
             "lname": lname,
@@ -63,7 +63,7 @@ def signup():
         return redirect(url_for("main.home"))
 
     return render_template("signup.html", title="FlaskBlog Register",
-                           form=form, user=user)
+                           form=form)
 
 
 @users.route("/logout")
@@ -76,7 +76,18 @@ def logout():
 
 @users.route("/profile", methods=["GET", "POST"])
 def profile():
+    ##########################################
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
+    ##########################################
     return render_template("profile.html", title="Profile", settingsForm=settingsForm)
+
+
+@users.route("/users/<user_id>")
+def single_user():
+    ##########################################
+    settingsForm = SettingsForm()
+    if settingsForm.validate_on_submit():
+        validate_settings(settingsForm)
+    ##########################################

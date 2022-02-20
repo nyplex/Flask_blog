@@ -32,6 +32,7 @@ def save_picture(form_picture):
     picture_path = os.path.join(
         current_app.root_path, 'static/media/profile_pics', picture_fn)
 
+    os.remove(os.path.join(current_app.root_path, 'static/media/profile_pics', current_user["image"]))
     output_size = (125, 125)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
@@ -42,20 +43,22 @@ def save_picture(form_picture):
 
 def validate_settings(form):
     upload_user = User(current_user)
-    user = mongo.db.users.find_one({"_id": ObjectId(current_user["_id"])})
     
     if form.username.data.strip() != "":
         upload_user.update({
             "username": form.username.data.strip()
         })
+        form.username.data = ""
     if form.fname.data.strip() != "":
         upload_user.update({
             "fname": form.fname.data.strip()
         })
+        form.fname.data = ""
     if form.lname.data.strip() != "":
         upload_user.update({
             "lname": form.lname.data.strip()
         })
+        form.lname.data = ""
     if form.password.data.strip() != "":
         password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
@@ -67,7 +70,7 @@ def validate_settings(form):
         upload_user.update({
             "image": filename
         })
-        
+    
     newvalues = { "$set": upload_user }
     mongo.db.users.update_one({"_id": ObjectId(current_user["_id"])}, newvalues)
     current_user.update(upload_user)
