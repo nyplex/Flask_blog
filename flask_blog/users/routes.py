@@ -1,10 +1,10 @@
 from flask_blog import mongo, bcrypt
 from flask import Blueprint, current_app, redirect, request, render_template, url_for, flash
-from flask_blog.users.forms import SignupForm, LoginForm
+from flask_blog.users.forms import SignupForm, LoginForm, SettingsForm
 from flask_blog.models import User
 from datetime import datetime
-from flask_blog.users.utils import create_username
-from flask_login import login_user, current_user, login_required, logout_user
+from flask_blog.users.utils import create_username, validate_settings
+from flask_login import login_user, current_user, logout_user
 
 users = Blueprint("users", __name__)
 
@@ -14,7 +14,7 @@ def login():
     form = LoginForm()
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
-    
+
     if form.validate_on_submit():
         # Find the using in the DB
         user = mongo.db.users.find_one({"email": form.email.data})
@@ -35,7 +35,9 @@ def login():
 @users.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
-    user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+    # user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
@@ -44,7 +46,7 @@ def signup():
         lname = str(form.lname.data).lower()
         username = create_username(fname, lname)
 
-        # Create new User to store in DB
+        # Create new User object using the data provided by user
         newUser = User({
             "fname": fname,
             "lname": lname,
@@ -61,7 +63,7 @@ def signup():
         return redirect(url_for("main.home"))
 
     return render_template("signup.html", title="FlaskBlog Register",
-                           form=form, user=user)
+                           form=form)
 
 
 @users.route("/logout")
@@ -72,11 +74,20 @@ def logout():
     return redirect(url_for("users.login"))
 
 
-@users.route("/profile")
+@users.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html", title="Profile")
+    ##########################################
+    settingsForm = SettingsForm()
+    if settingsForm.validate_on_submit():
+        validate_settings(settingsForm)
+    ##########################################
+    return render_template("profile.html", title="Profile", settingsForm=settingsForm)
 
 
-@users.route("/settings")
-def settings():
-    return render_template("settings.html", title="Your Settings")
+@users.route("/users/<user_id>")
+def single_user():
+    ##########################################
+    settingsForm = SettingsForm()
+    if settingsForm.validate_on_submit():
+        validate_settings(settingsForm)
+    ##########################################

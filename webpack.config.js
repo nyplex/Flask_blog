@@ -1,6 +1,4 @@
 const path = require("path")
-const fs = require('fs');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
 
@@ -8,12 +6,12 @@ const webpack = require("webpack");
 
 module.exports = {
     entry: "./flask_blog/static/js/index.js",
-    mode: "development",
+    mode: "development", //change to production
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, "flask_blog/static/"),
     },
-    devtool: 'inline-source-map',
+    devtool: 'inline-source-map', //remove on production
     module: {
         rules: [
             {

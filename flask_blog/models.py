@@ -11,7 +11,6 @@ def load_user(email):
 
 
 class User(SimpleModel):
-
     collection = mongo.db.users
 
     def is_authenticated():

@@ -1,40 +1,45 @@
 const validate = require("validate.js")
 import {
-    signupValidator
+    formValidator
 } from "./validators.js"
 
 
-$("#fname, #lname, #email, #confirm_email, #password, #confirm_password").on("input", (e) => {
+$("#fname, #lname, #email, #confirm_email, #password, #confirm_password, #username").on("input", (e) => {
     let check;
     switch (e.target.id) {
+        case "username":
+            check = validate({
+                username: $(e.target).val()
+            }, formValidator)
+            break;
         case "fname":
             check = validate({
                 fname: $(e.target).val()
-            }, signupValidator)
+            }, formValidator)
             break;
         case "lname":
             check = validate({
                 lname: $(e.target).val()
-            }, signupValidator)
+            }, formValidator)
             break;
         case "email":
             check = validate({
                 email: $(e.target).val()
-            }, signupValidator)
+            }, formValidator)
             break;
         case "confirm_email":
             check = validate({
                 email: $("#email").val(),
                 confirm_email: $(e.target).val()
-            }, signupValidator)
+            }, formValidator)
             break;
         case "password":
             check = validate({
                 password: $(e.target).val()
-            }, signupValidator)
+            }, formValidator)
             break;
         case "confirm_password":
-            check = validate({"original_password": $("#password").val(),confirm_password: $(e.target).val()}, signupValidator)
+            check = validate({"original_password": $("#password").val(),confirm_password: $(e.target).val()}, formValidator)
             break;
         default:
             break;
