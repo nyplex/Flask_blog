@@ -65,8 +65,9 @@
     }
 
     .navbar-unactive-link {
-        @apply hover:bg-blue-200 dark:hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
+        @apply hover:bg-blue-200 dark:hover:bg-transparent md:hover:bg-transparent md:hover:text-blue-700 dark:text-gray-500 text-gray-700
     }
+
 }
 
 /****** Flash Messages Comp ******/
@@ -107,4 +108,15 @@
 .scrollbar::-webkit-scrollbar-thumb {
     cursor: pointer;
     background-color: #a0aec0;
+}
+
+
+/****** Category Label ******/
+
+.category-label-yellow {
+    @apply bg-yellow-100 hover:bg-yellow-200 text-yellow-800 text-sm font-medium px-2.5 py-1 rounded dark:bg-yellow-200 dark:hover:bg-yellow-300 dark:text-yellow-900
+}
+
+.category-label-purple {
+    @apply bg-purple-100 hover:bg-purple-200 text-purple-800 text-sm font-medium px-2.5 py-1 rounded dark:bg-purple-200 dark:hover:bg-purple-300 dark:text-purple-900
 }
