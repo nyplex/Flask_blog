@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, render_template, url_for
+from flask import Blueprint, request, render_template
 from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
 from flask_blog.users.utils import validate_settings

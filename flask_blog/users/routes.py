@@ -1,5 +1,5 @@
 from flask_blog import mongo, bcrypt
-from flask import Blueprint, current_app, redirect, request, render_template, url_for, flash
+from flask import Blueprint, redirect, request, render_template, url_for, flash
 from flask_blog.users.forms import SignupForm, LoginForm, SettingsForm
 from flask_blog.models import User
 from datetime import datetime
@@ -39,9 +39,10 @@ def signup():
         return redirect(url_for("main.home"))
     # user = mongo.db.users.find_one({"email": "john.doe@gmail.com"})
     if form.validate_on_submit():
+        # has password
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
-
+        # lower data
         fname = str(form.fname.data).lower()
         lname = str(form.lname.data).lower()
         username = create_username(fname, lname)
@@ -56,10 +57,10 @@ def signup():
             "image": "default.jpg",
             "signup_date": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         })
-        newUser.save()  # Save new User in the DB
+        # Save new user in DB & log in him
+        newUser.save()
         login_user(newUser)
         flash("Thanks for registered with us! You are now logged in.", "flash-success")
-
         return redirect(url_for("main.home"))
 
     return render_template("signup.html", title="FlaskBlog Register",

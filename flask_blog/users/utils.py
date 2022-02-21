@@ -1,4 +1,4 @@
-from flask import current_app, redirect, url_for, flash
+from flask import current_app, flash
 from flask_blog import mongo, bcrypt
 from flask_login import current_user
 from flask_blog.models import User
@@ -9,9 +9,21 @@ import os
 
 
 def create_username(fname, lname):
+    """Create an unique username when user sign in
+
+    Args:
+        fname (string): user input
+        lname (string): user input
+
+    Returns:
+        string: return an unique username
+    """
+    # concat. fname & lname to generate generic username
     username = fname + "_" + lname
+    #check if the generic username exist in DB
     user = list(mongo.db.users.find(
         {"username": {"$regex": username + '.*'}}).limit(1).sort("_id", -1))
+    # if generic username exist add number at the end / incremente this nbr each time
     if len(user) > 0:
         splitId = user[0]["username"].split(username)[1]
         if splitId == "":
@@ -21,6 +33,7 @@ def create_username(fname, lname):
                 int(user[0]["username"].split(username)[1]) + 1)
             newUsername = username + lastUsernameID
         return newUsername
+    # return generic username
     else:
         return username
 
@@ -32,8 +45,8 @@ def save_picture(form_picture):
     picture_path = os.path.join(
         current_app.root_path, 'static/media/profile_pics', picture_fn)
 
-    # if current_user["image"] != "default.jpg":
-    os.remove(os.path.join(current_app.root_path, 'static/media/profile_pics', current_user["image"]))
+    if current_user["image"] != "default.jpg":
+        os.remove(os.path.join(current_app.root_path, 'static/media/profile_pics', current_user["image"]))
     output_size = (125, 125)
     i = Image.open(form_picture)
     i.thumbnail(output_size)

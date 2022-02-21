@@ -79,7 +79,7 @@
                     {{ form.topicTags(class="form-invalid-input") }}
                     {% for error in form.topicTags.errors %}
                         <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
-                {% endfor %}
+                    {% endfor %}
                {% else %}
                     {{ form.topicTags.label(class="form-label text-lg") }}
                     {{ form.topicTags(class="form-input") }}
