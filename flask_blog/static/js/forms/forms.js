@@ -4,7 +4,7 @@ import {
 } from "./validators.js"
 
 
-$("#fname, #lname, #email, #confirm_email, #password, #confirm_password, #username").on("input", (e) => {
+$("#fname, #lname, #email, #confirm_email, #password, #confirm_password, #username, #topicTitle, #topicBody").on("input", (e) => {
     let check;
     switch (e.target.id) {
         case "username":
@@ -40,6 +40,16 @@ $("#fname, #lname, #email, #confirm_email, #password, #confirm_password, #userna
             break;
         case "confirm_password":
             check = validate({"original_password": $("#password").val(),confirm_password: $(e.target).val()}, formValidator)
+            break;
+        case "topicTitle":
+            check = validate({
+                topicTitle: $(e.target).val()
+            }, formValidator)
+            break;
+        case "topicBody":
+            check = validate({
+                topicBody: $(e.target).val()
+            }, formValidator)
             break;
         default:
             break;

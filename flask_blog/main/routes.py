@@ -19,9 +19,10 @@ def home():
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
     ##########################################
-    
-    # Get post from DB
-    posts = mongo.db.posts.find().sort("posted_date", -1)
+    if request.method == "GET" and request.args.get('sort'):
+        posts = mongo.db.posts.find().sort(request.args.get('sort'), 1)
+    else:
+        posts = mongo.db.posts.find().sort("posted_date", -1)
     updated_post = []
     for post in posts:
         author = mongo.db.users.find_one(ObjectId(post["author"]))

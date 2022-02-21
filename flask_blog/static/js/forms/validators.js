@@ -1,4 +1,16 @@
 export let formValidator = {
+    topicTitle: {
+        length: {
+            minimum: 5,
+            maximum: 50,
+        },
+    },
+    topicBody: {
+        length: {
+            minimum: 10,
+            maximum: 10000,
+        },
+    },
     username: {
         length: {
             minimum: 2,

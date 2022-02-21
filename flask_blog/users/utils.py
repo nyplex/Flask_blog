@@ -32,6 +32,7 @@ def save_picture(form_picture):
     picture_path = os.path.join(
         current_app.root_path, 'static/media/profile_pics', picture_fn)
 
+    # if current_user["image"] != "default.jpg":
     os.remove(os.path.join(current_app.root_path, 'static/media/profile_pics', current_user["image"]))
     output_size = (125, 125)
     i = Image.open(form_picture)
