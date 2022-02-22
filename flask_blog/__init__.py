@@ -11,6 +11,7 @@ from flask_bcrypt import Bcrypt
 mongo = PyMongo(tls=True, tlsAllowInvalidCertificates=True)
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
+login_manager.login_message_category = "flash-danger"
 bcrypt = Bcrypt()
 
 

@@ -1,4 +1,5 @@
-from flask import Blueprint, flash, request, render_template
+from flask import Blueprint, flash, redirect, request, render_template, url_for
+from flask_login import login_required
 from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
 from flask_blog.users.utils import validate_settings
@@ -10,6 +11,7 @@ posts = Blueprint("posts", __name__)
 
 
 @posts.route("/new-post", methods=["GET", "POST"])
+@login_required
 def new_post():
 
     settingsForm = SettingsForm()
@@ -20,6 +22,8 @@ def new_post():
         # new post submit
         if "newPostSubmit" in request.form and newTopicForm.validate_on_submit():
             saveNewTopic(newTopicForm, request.form)
+            flash("New Topic successfully posted!", "flash-success")
+            return redirect(url_for("posts.new_post"))
         # update user settings submit
         elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)

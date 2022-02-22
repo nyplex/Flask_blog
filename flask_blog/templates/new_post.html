@@ -64,14 +64,18 @@
         <div class="flex mobile:flex-row flex-col justify-between space-y-6 mobile:space-y-0">
             <!-- Category -->
             <div class="w-60">
-                <label for="newTopicCategory" class="form-label text-lg">Category</label>
-                <select id="newTopicCategory" name="newTopicCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                    <option selected disabled value="">Choose here</option>
-                    {% for category in categories %}
-                        <option value="{{ category.category_name }}">{{ category.category_name|capitalize }}</option>
+                {% if form.categoryField.errors %}
+                    {{ form.categoryField.label(class="form-invalid-label text-lg") }}
+                    {{ form.categoryField(class="form-invalid-input") }}
+                    {% for error in form.categoryField.errors %}
+                        <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
                     {% endfor %}
-                </select>
+               {% else %}
+                    {{ form.categoryField.label(class="form-label text-lg") }}
+                    {{ form.categoryField(class="form-input") }}
+                {% endif %}
             </div>
+
             <!-- Tags -->
             <div class="w-full mobile:ml-8" id="mainTagsContainer">
                 {% if form.topicTags.errors %}

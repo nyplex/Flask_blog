@@ -9,18 +9,9 @@ import os
 
 
 def create_username(fname, lname):
-    """Create an unique username when user sign in
-
-    Args:
-        fname (string): user input
-        lname (string): user input
-
-    Returns:
-        string: return an unique username
-    """
     # concat. fname & lname to generate generic username
     username = fname + "_" + lname
-    #check if the generic username exist in DB
+    # check if the generic username exist in DB
     user = list(mongo.db.users.find(
         {"username": {"$regex": username + '.*'}}).limit(1).sort("_id", -1))
     # if generic username exist add number at the end / incremente this nbr each time
@@ -38,26 +29,38 @@ def create_username(fname, lname):
         return username
 
 
-def save_picture(form_picture):
+def save_picture(form_picture, type):
+    # generate random key
     random_hex = secrets.token_hex(8)
+    # get the picture file name
     _, f_ext = os.path.splitext(form_picture.filename)
+    # concat. random key + pic. file extension
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(
-        current_app.root_path, 'static/media/profile_pics', picture_fn)
+    # save the picture
+    if type == "profile":
+        picture_path = os.path.join(
+            current_app.root_path, 'static/media/profile_pics', picture_fn)
+        # delete previous user's pic BUT not the default img
+        if current_user["image"] != "default.jpg":
+            os.remove(os.path.join(current_app.root_path,
+                      'static/media/profile_pics', current_user["image"]))
+        output_size = (300, 300)
+        i = Image.open(form_picture)
+        i.thumbnail(output_size)
+        i.save(picture_path)
+        return picture_fn
 
-    if current_user["image"] != "default.jpg":
-        os.remove(os.path.join(current_app.root_path, 'static/media/profile_pics', current_user["image"]))
-    output_size = (125, 125)
-    i = Image.open(form_picture)
-    i.thumbnail(output_size)
-    i.save(picture_path)
-
-    return picture_fn
+    elif type == "postImage":
+        picture_path = os.path.join(
+            current_app.root_path, 'static/media/posts/pictures', picture_fn)
+        i = Image.open(form_picture)
+        i.save(picture_path)
+        return "pictures/" + picture_fn
 
 
 def validate_settings(form):
     upload_user = User(current_user)
-    
+
     if form.username.data.strip() != "":
         upload_user.update({
             "username": form.username.data.strip()
@@ -80,13 +83,14 @@ def validate_settings(form):
             "password": password
         })
     if form.profile_pic.data:
-        filename = save_picture(form.profile_pic.data)
+        filename = save_picture(form.profile_pic.data, "profile")
         upload_user.update({
             "image": filename
         })
-    
-    newvalues = { "$set": upload_user }
-    mongo.db.users.update_one({"_id": ObjectId(current_user["_id"])}, newvalues)
+
+    newvalues = {"$set": upload_user}
+    mongo.db.users.update_one(
+        {"_id": ObjectId(current_user["_id"])}, newvalues)
     current_user.update(upload_user)
 
     flash("Your profile has been uptaded!", "flash-success")
