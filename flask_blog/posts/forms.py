@@ -28,7 +28,8 @@ class NewTopicForm(FlaskForm):
     def validate_topicTags(self, topicTags):
         tags = self.newTopicTags.data
         tagsList = tags.split(",")
-        print(tagsList)
         if len(tagsList) > 5:
+            self.newTopicTags.data = ""
+            topicTags.data = ""
             raise ValidationError(
                 'You can not have more than 5 tags')

@@ -1,8 +1,9 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, flash, request, render_template
 from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
 from flask_blog.users.utils import validate_settings
 from flask_blog.posts.forms import NewTopicForm
+from flask_blog.posts.utils import saveNewTopic
 
 
 posts = Blueprint("posts", __name__)
@@ -14,10 +15,17 @@ def new_post():
     settingsForm = SettingsForm()
     newTopicForm = NewTopicForm()
     formCategories = mongo.db.categories.find().sort("category_name", 1)
-    if "newPostSubmit" in request.form and newTopicForm.validate_on_submit():
-        print("submited")
-    if "settingsSubmit" in request.form and settingsForm.validate_on_submit():
-        validate_settings(settingsForm)
+    # Check if a form has been submited
+    if request.method == "POST":
+        # new post submit
+        if "newPostSubmit" in request.form and newTopicForm.validate_on_submit():
+            saveNewTopic(newTopicForm, request.form)
+        # update user settings submit
+        elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
+            validate_settings(settingsForm)
+        # if forms are not validated flash message
+        else:
+            flash("There is an error in the form", "flash-danger")
     
 
     return render_template("new_post.html",

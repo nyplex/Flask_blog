@@ -24,3 +24,7 @@ class User(SimpleModel):
 
     def get_id(self):
         return self.email
+
+
+class Post(SimpleModel):
+    collection = mongo.db.posts

@@ -52,7 +52,7 @@ topicTags.on("input", (e) => {
         }
         // if the tags array len is less than 5, add the user's input and display the new tag under the input field
         if(tags.length < 5) {
-            tag = `<span class='primary-tags hover:bg-red-400 hover:text-red-900 dark:hover:bg-red-500 hover:cursor-pointer'><i class='fa-solid fa-hashtag'></i>${val}</span>`
+            tag = `<span class='hover-tags'><i class='fa-solid fa-hashtag'></i>${val}</span>`
             tagsContainer.append(tag)
             tags.push(val)
             topicTags.val(null)

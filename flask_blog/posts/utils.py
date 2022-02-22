@@ -1,5 +1,9 @@
 from datetime import datetime
-
+from flask import flash
+from flask_blog import mongo
+from flask_login import current_user
+from flask_blog.models import Post
+from flask_blog.users.utils import save_picture
 
 def format_post_date(postDate):
         then = postDate
@@ -24,3 +28,25 @@ def format_post_date(postDate):
         if duration_in_s > 0:
             return "now"
         return "now"
+
+
+def saveNewTopic(form, form2):
+    category_id = mongo.db.categories.find_one({"category_name": form2.get("newTopicCategory")})
+    tags = form.newTopicTags.data
+    tagsList = tags.split(",")
+    if form.topicMedia.data:
+        filename = save_picture(form.topicMedia.data)
+    else: 
+        filename = None
+    newTopic = Post({
+        "author": current_user["_id"],
+        "title": form.topicTitle.data,
+        "content": form.topicBody.data,
+        "posted_date": datetime.now(),
+        "like": 0,
+        "category": category_id["_id"],
+        "tags": tagsList,
+        "media": filename
+    })
+    
+    mongo.db.posts.insert_one(newTopic)
