@@ -2,7 +2,7 @@ import "../css/style.css"
 import "flowbite"
 import "./forms/forms"
 import "./forms/settings"
-
+import "./forms/newPost"
 
 //Close the flash message when user click on the cls btn
 $("#flash_message_btn").on("click", (e) => {
@@ -16,17 +16,17 @@ if($("#flash_message").length) {
 }
 
 
-
-
-
+// Dark & Light theme function
 var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
 var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
 // Change the icons inside the button based on previous settings
 if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     themeToggleLightIcon.classList.remove('hidden');
+    document.documentElement.classList.add('dark');
 } else {
     themeToggleDarkIcon.classList.remove('hidden');
+    document.documentElement.classList.remove('dark');
 }
 
 var themeToggleBtn = document.getElementById('theme-toggle');
@@ -56,6 +56,5 @@ themeToggleBtn.addEventListener('click', function() {
             document.documentElement.classList.add('dark');
             localStorage.setItem('color-theme', 'dark');
         }
-    }
-    
-});
+    } 
+})

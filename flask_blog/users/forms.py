@@ -92,7 +92,7 @@ class SettingsForm(FlaskForm):
     confirm_password = PasswordField("Confirm your password",
                                      render_kw={"placeholder": "••••••••"}, 
                                      validators=[EqualTo("password")])
-    submit = SubmitField("Update profile")
+    settingsSubmit = SubmitField("Update profile")
 
     def validate_username(slef, username):
         value = username.data.replace(" ", "")

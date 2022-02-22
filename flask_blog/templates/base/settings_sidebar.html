@@ -1,5 +1,5 @@
 {% if current_user.is_authenticated %}
-<aside class="hidden w-full mobile:w-auto absolute top-[61px] right-0 z-40 max-h-[100vh] content-area overflow-y-scroll scrollbar" aria-label="Sidebar" id="settings_sidebar">
+<aside class="hidden w-full mobile:w-auto fixed top-[61px] right-0 z-40 max-h-[100vh] content-area overflow-y-scroll scrollbar" aria-label="Sidebar" id="settings_sidebar">
     <div class="px-6 mobile:py-4 py-2 overflow-y-auto rounded-bl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 border-l-2 border-b-2 shadow-md">
         <!-- Form Title -->
         <ul class="space-y-2">
@@ -17,7 +17,7 @@
                 <li>
                     {% if settingsForm.profile_pic.errors %}
                         {{ settingsForm.profile_pic.label(class="form-invalid-label") }}
-                        {{ settingsForm.profile_pic(class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
+                        {{ settingsForm.profile_pic(class="block w-full text-sm text-red-900 bg-red-50 rounded-lg border border-red-300 cursor-pointer dark:text-red-400 focus:outline-none focus:border-transparent dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400") }}
                         {% for error in settingsForm.profile_pic.errors %}
                         <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
                     {% endfor %}
@@ -93,7 +93,7 @@
                 </li>
                 <!-- Submit Field -->
                 <li>
-                    {{ settingsForm.submit(class="primary-btn w-full font-medium text-sm px-5 py-2.5 mt-4 hover:cursor-pointer") }}
+                    {{ settingsForm.settingsSubmit(class="primary-btn w-full font-medium text-sm px-5 py-2.5 mt-4 hover:cursor-pointer") }}
                 </li>
             </ul>
         </form>
