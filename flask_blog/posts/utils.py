@@ -4,6 +4,7 @@ from flask_blog import mongo
 from flask_login import current_user
 from flask_blog.models import Post
 from flask_blog.users.utils import save_picture
+from bson import ObjectId
 import secrets
 import os
 import re
@@ -78,7 +79,45 @@ def saveNewTopic(form, form2):
         "like": 0,
         "category": category_id["_id"],
         "tags": tagsList,
-        "media": filename
+        "media": filename,
+        "dislike": 0,
+        "love": 0,
+        "comments": []
     })
 
     mongo.db.posts.insert_one(newTopic)
+
+
+def update_posts_data(posts):
+    updated_posts = []
+
+    for post in posts:
+        # get author and category of each post from DB using their ID
+        post["author"] = mongo.db.users.find_one(ObjectId(post["author"]))
+        post["category"] = mongo.db.categories.find_one(ObjectId(post["category"]))
+        post["posted_date"] = format_post_date(post["posted_date"])
+
+        updated_posts.append(post)
+    
+    for updated_post in updated_posts:
+        removeKey = ["password", "email", "signup_date"]
+        for key in removeKey:
+            del updated_post["author"][key]
+                
+    return updated_posts
+
+
+def update_post_data(post):
+    postArray = []
+    post["author"] = mongo.db.users.find_one(ObjectId(post["author"]))
+    post["category"] = mongo.db.categories.find_one(ObjectId(post["category"]))
+    post["posted_date"] = format_post_date(post["posted_date"])
+    
+    #Update the new post array with the updated post 
+    postArray.append(post)
+    # remove user private data before sending it back to the Ajax call
+    removeKey = ["password", "email", "signup_date"]
+    for key in removeKey:
+        del postArray[0]["author"][key]
+        
+    return postArray

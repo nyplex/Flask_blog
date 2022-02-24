@@ -132,3 +132,7 @@
 .hover-tags {
     @apply primary-tags hover:bg-red-400 hover:text-red-900 dark:hover:bg-red-500 hover:cursor-pointer
 }
+
+.postContent ol{
+    @apply list-decimal px-4
+}
