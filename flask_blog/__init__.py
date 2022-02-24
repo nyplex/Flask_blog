@@ -9,7 +9,7 @@ from flask_bcrypt import Bcrypt
 from flask_ckeditor import CKEditor
 
 
-mongo = PyMongo(tls=True, tlsAllowInvalidCertificates=True)
+mongo = PyMongo()
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = "flash-danger"
