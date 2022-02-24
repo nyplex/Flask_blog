@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileSize
 from wtforms import StringField, SubmitField, ValidationError, TextAreaField, HiddenField, SelectField
 from wtforms.validators import DataRequired, Length
+from flask_ckeditor import CKEditorField
 from flask_blog import mongo
 
 
@@ -19,10 +20,10 @@ class NewTopicForm(FlaskForm):
                                          Length(min=5, max=50)],
                              render_kw={"placeholder": "Subject of your topic"})
 
-    topicBody = TextAreaField("Topic Body",
-                              validators=[DataRequired(),
-                                          Length(min=10, max=10000)],
-                              render_kw={"placeholder": "Let's get started"})
+
+    topicBody = CKEditorField('Topic Body', validators=[DataRequired(),
+                                             Length(min=10, max=10000)],
+                         render_kw={"placeholder": "Let's get started"})
 
     topicMedia = FileField("Topic Media", validators=[
                            FileAllowed(["jpg", "jpeg", "png", "avi", "mp4",

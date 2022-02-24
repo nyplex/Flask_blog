@@ -11,7 +11,7 @@
                         <!-- Search Row -->
                         <tr>
                             <th scope="col" class=" pb-4 text-sm font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400" colspan="4">
-                                <div class="flex flex-row mobile:justify-left justify-center items-center">
+                                <div class="flex flex-row mobile:justify-left justify-between ml-2 mobile:ml-0 items-center">
                                     <!-- Search Input -->
                                     <div class="relative mobile:mr-4">
                                         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -20,6 +20,11 @@
                                         <input type="text" id="email-adress-icon" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
                                     </div>
                                     <span class="mobile:mx-auto"></span>
+                                    <div>
+                                        <a href="{{ url_for('posts.new_post') }}" class="hidden mobile:block text-green-500 hover:text-white border border-green-700 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">Add New Topic</a>
+
+                                        <a href="{{ url_for('posts.new_post') }}" class="mobile:hidden text-green-500 hover:text-white hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm text-center dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800"><i class="fa-solid fa-pen-to-square text-2xl self-end mr-2"></i></a>
+                                    </div>
                                 </div>
                             </th>
                         </tr><!-- Search Row End -->
@@ -65,7 +70,7 @@
                                         <img class="rounded-full mr-4 w-10 h-10" src="{{ url_for('static', filename='media/profile_pics/' + post['author'].image) }}" alt="">
                                         <div class="flex flex-col w-full space-y-2">
                                             <!-- Topic Title -->
-                                            <a href="#" class="text-left hover:text-blue-700 text-lg">{{ post['title'] }}</a>
+                                            <a href="{{ url_for('posts.single_post', post_id=post['_id']) }}" class="text-left hover:text-blue-700 text-lg">{{ post['title'] }}</a>
                                             <!-- Topic Tags -->
                                             <div class="flex flex-row flex-wrap gap-2">
                                                 {% for tag in post["tags"] %}
@@ -99,7 +104,7 @@
     </div>
 </div>
 
-<div class="mx-auto mobile:mb-12 mb-4 w-auto text-center">
+<div class="mx-auto mobile:mb-12 mb-4 w-auto text-center" id="loadingBtnContainer">
     <button id="loadingBtn" class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center">
         <div class="hidden" id="loadingIcon">
                 <svg role="status" class="inline mr-2 w-4 h-4 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
