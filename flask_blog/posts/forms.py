@@ -1,6 +1,7 @@
 from email import message
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileSize
+from numpy import kaiser
 from wtforms import StringField, SubmitField, ValidationError, TextAreaField, HiddenField, SelectField
 from wtforms.validators import DataRequired, Length
 from flask_ckeditor import CKEditorField
@@ -8,7 +9,6 @@ from flask_blog import mongo
 
 
 class NewTopicForm(FlaskForm):
-    # get the categories to populate the catgeries field
     categories = mongo.db.categories.find().sort("category_name")
     choices = []
     for category in categories:
@@ -34,10 +34,10 @@ class NewTopicForm(FlaskForm):
     categoryField = SelectField(
         u"Category", choices=choices, validators=[DataRequired()])
 
-    # Visible field , for user to input tags
+
     topicTags = StringField(
         "Tags", render_kw={"placeholder": "Use comma to separate tags"})
-    # Hidden field that store the tags
+
     newTopicTags = HiddenField(label=None)
 
     newPostSubmit = SubmitField("Create Post")
@@ -50,3 +50,10 @@ class NewTopicForm(FlaskForm):
             topicTags.data = ""
             raise ValidationError(
                 'You can not have more than 5 tags')
+    
+    def validate_topicBody(self, topicBody):
+        print(topicBody.data)
+        if len(topicBody.data) < 17 or len(topicBody.data) > 10000:
+            raise ValidationError(
+                'Topic body must be between 10 and 10.000 characters')
+            

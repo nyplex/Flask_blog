@@ -12,15 +12,13 @@ main = Blueprint("main", __name__)
 @main.route("/", methods=["GET", "POST"])
 @main.route("/home", methods=["GET", "POST"])
 def home():
-    # Load and validate User's settings form
+
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
         
-    # Load the first 5 most recent post
+        
     posts = mongo.db.posts.find().sort("posted_date", -1).limit(5)
-    
-    # Create a new array containing all the posts with the formated data.
     updated_post = update_posts_data(posts)
 
     return render_template("home.html",

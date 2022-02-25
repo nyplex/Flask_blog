@@ -136,3 +136,8 @@
 .postContent ol{
     @apply list-decimal px-4
 }
+
+
+.cke_contents{
+    background-color:red;
+}

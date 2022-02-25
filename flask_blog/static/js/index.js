@@ -4,6 +4,7 @@ import "./forms/forms"
 import "./forms/settings"
 import "./forms/newPost"
 import "./ajax/ajax"
+import "./ckEditor"
 
 //Close the flash message when user click on the cls btn
 $("#flash_message_btn").on("click", (e) => {
