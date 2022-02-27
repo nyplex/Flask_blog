@@ -3,20 +3,24 @@ let tagsContainer = $("#newTopicTagsContainer")
 let maxTitleLen = 50
 let tags = []
 
-if($('#newTopicTags').val() != ""){
-    let value = $('#newTopicTags').val()
-    tags = value.split(",")
-
-    tags.forEach(t => {
-        tag = `<span class='hover-tags'><i class='fa-solid fa-hashtag'></i>${t}</span>`
-        tagsContainer.append(tag)
-    });
-    topicTags.val(null)
-    $("#newTopicTags").val(tags)
-    $("#invalid-label-tags").empty()
-    topicTags.addClass("form-input")
-    topicTags.removeClass("form-invalid-input")
+if($('#newTopicTags').length){
+    if($('#newTopicTags').val() != ""){
+        let value = $('#newTopicTags').val()
+        tags = value.split(",")
+    
+        tags.forEach(t => {
+            tag = `<span class='hover-tags'><i class='fa-solid fa-hashtag'></i>${t}</span>`
+            tagsContainer.append(tag)
+        });
+        topicTags.val(null)
+        $("#newTopicTags").val(tags)
+        $("#invalid-label-tags").empty()
+        topicTags.addClass("form-input")
+        topicTags.removeClass("form-invalid-input")
+    }
 }
+
+
 
 // Change the max character span on title input when user type
 $("#topicTitle").on("input", (e) => {

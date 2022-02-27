@@ -101,15 +101,19 @@
 
         <!-- Submit & Cancel form -->
         <div class="mt-16 flex flex-row mobile:justify-end justify-center">
-            <a class="danger-btn px-4 py-2.5 mobile:mr-4 ml-4 mobile:ml-0 mb-12 order-2 mobile:-order-1" href="{{ url_for('main.home') }}">Cancel</a>
-            {{ form.newPostSubmit(class="primary-btn px-3 py-2.5 mb-12") }}
+            <a class="danger-btn px-4 py-2.5 mobile:mr-4 ml-4 mobile:ml-0 mb-12 order-2 mobile:-order-1" href="{{ url_for('posts.single_post', post_id=post_id) }}">Cancel</a>
+            <input class="primary-btn px-3 py-2.5 mb-12" id="newPostSubmit" name="newPostSubmit" type="submit" value="Edit Post">
+            
+            
         </div>
 
     </form>
 </div>
 
-{{ ckeditor.load() }}
+{{ ckeditor.load(pkg_type="full") }}
 {{ ckeditor.config(name='topicBody') }}
+
+
 
 
 {%  endblock content %}

@@ -17,7 +17,7 @@
                                         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                                             <i class="fa-solid fa-magnifying-glass text-gray-500 dark:text-gray-400"></i>
                                         </div>
-                                        <input type="text" id="email-adress-icon" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
+                                        <input type="text" id="posts_search" name="posts_search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
                                     </div>
                                     <span class="mobile:mx-auto"></span>
                                     <div>
@@ -83,7 +83,7 @@
                                 <!-- Category Col -->
                                 <td class="hidden lg:table-cell py-4 px-2 text-sm font-medium text-gray-500 dark:text-white text-center">
                                     <!-- Topic Category -->
-                                    <a href="#">
+                                    <a href="{{ url_for('main.single_category', category_id=post['category']._id) }}">
                                         <span class="category-label-{{ post['category'].category_color }}">{{ post['category'].category_name|capitalize}}</span>
                                     </a>
                                 </td>

@@ -60,7 +60,7 @@ let populateHomePage = (data) => {
                 <!-- Category Col -->
                 <td class="hidden lg:table-cell py-4 px-2 text-sm font-medium text-gray-500 dark:text-white text-center">
                     <!-- Topic Category -->
-                    <a href="#">
+                    <a href="/categories/${post.category._id.$oid}">
                         <span class="category-label-${post.category.category_color}">${category}</span>
                     </a>
                 </td>

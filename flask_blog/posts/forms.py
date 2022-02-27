@@ -52,7 +52,6 @@ class NewTopicForm(FlaskForm):
                 'You can not have more than 5 tags')
     
     def validate_topicBody(self, topicBody):
-        print(topicBody.data)
         if len(topicBody.data) < 17 or len(topicBody.data) > 10000:
             raise ValidationError(
                 'Topic body must be between 10 and 10.000 characters')

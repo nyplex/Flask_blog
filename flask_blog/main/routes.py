@@ -26,6 +26,20 @@ def home():
                            settingsForm=settingsForm, posts=updated_post)
 
 
+@main.route("/categories/<category_id>", methods=["GET", "POST"])
+def single_category(category_id):
+    
+    posts = mongo.db.posts.find({"category": ObjectId(category_id)}).sort("posted_date", -1).limit(5)
+    updated_post = update_posts_data(posts)
+    
+    settingsForm = SettingsForm()
+    if settingsForm.validate_on_submit():
+        validate_settings(settingsForm)
+    
+    return render_template("home.html",
+                           page_title="Single Category", 
+                           settingsForm=settingsForm, posts=updated_post)
+
 
 @main.route("/load")
 def load():
