@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 from flask import current_app
 from flask_blog import mongo
@@ -36,21 +37,18 @@ def format_post_date(postDate):
 
 
 def saveTopicVideo(video):
-    # generate random key
     random_hex = secrets.token_hex(8)
-    # get the picture file name
     _, f_ext = os.path.splitext(video.filename)
-    # concat. random key + pic. file extension
     video_fn = random_hex + f_ext
     # save the file
     picture_path = os.path.join(
         current_app.root_path, 'static/media/posts/videos', video_fn)
     video.save(picture_path)
-    # return the file name
+
     return "videos/" + video_fn
 
 
-def saveNewTopic(form, form2):
+def saveNewTopic(form):
     category_id = mongo.db.categories.find_one(
         {"category_name": form.categoryField.data})
     tags = form.newTopicTags.data
@@ -76,17 +74,51 @@ def saveNewTopic(form, form2):
         "title": re.sub("\s\s+", " ", form.topicTitle.data),
         "content": form.topicBody.data,
         "posted_date": datetime.now(),
-        "like": 0,
         "category": category_id["_id"],
         "tags": tagsList,
         "media": filename,
+        "like": 0,
+        "liked_by": [],
         "dislike": 0,
+        "disliked_by": [],
         "love": 0,
+        "loved_by": [],
         "comments": []
     })
-
+    cat = mongo.db.categories.find_one(category_id)
+    count = cat["count"]
+    mongo.db.categories.update_one(category_id, {"$set":{"count": count + 1}})
     mongo.db.posts.insert_one(newTopic)
 
+
+def edit_db_post(form, post_id):
+    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    category_id = mongo.db.categories.find_one(
+        {"category_name": form.categoryField.data})
+    
+    tags = form.newTopicTags.data
+    tagsList = tags.split(",")
+    if tagsList == [""]:
+        tagsList = []
+    # if user input media
+    if form.topicMedia.data:
+        postMedia = form.topicMedia.data
+        # get the file extension
+        _, f_ext = os.path.splitext(postMedia.filename)
+        if f_ext in [".png", ".jpg", ".jpeg"]:
+            filename = save_picture(form.topicMedia.data, "postImage")
+        else:
+            filename = saveTopicVideo(form.topicMedia.data)
+    else:
+        filename = None
+    # Create new Post object to save inDB
+    mongo.db.posts.update_one(post, {"$set": {
+        "title": re.sub("\s\s+", " ", form.topicTitle.data),
+        "content": form.topicBody.data,
+        "category": category_id["_id"],
+        "tags": tagsList,
+        "media": filename
+    }})
 
 def update_posts_data(posts):
     updated_posts = []

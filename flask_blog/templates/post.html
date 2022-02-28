@@ -26,27 +26,59 @@
             </div>
         </div>
         <hr class="my-4 dark:border-gray-600 border-gray-400">
-        <div class="flex flex-row justify-between">
-            <div class="postContent text-lg font-normal dark:text-gray-200 text-gray-800 w-[60%]">
+        <div class="flex flex-col md:flex-row justify-between">
+            <div class="postContent text-lg font-normal dark:text-gray-200 text-gray-800 md:w-[60%] w-full">
                 {{ content|safe|trim }}
             </div>
             {% if post['media'] %}
-            <div class="ml-4 w-[30%]">
+            <div class="mx-auto mt-4 md:mt-0 md:w-[30%] w-[60%]">
                 <img src="{{ url_for('static', filename='media/posts/' + post['media']) }}" alt="Post Image" class="w-full rounded-lg">
             </div>
             {% endif %}
         </div>
-        <div class="flex flex-row justify-between mt-8 items-center">
+        <div class="flex flex-col mobile:flex-row justify-between mt-8 items-center gap-8">
+            <!-- Like, Unlike, Love btns -->
             <div class="flex flex-row gap-8">
-                <div><i class="fa-solid fa-thumbs-up text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700"></i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span></div>
-                <div><i class="fa-solid fa-thumbs-down text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700"></i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span></div>
-                <div><i class="fa-solid fa-heart text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-red-600 hover:text-red-600"></i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span></div>
+                <!-- Like Btn status -->
+                {% if current_user["_id"] in post["liked_by"] %}
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id']) }}" class="fa-solid fa-thumbs-up text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
+                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id']) }}" class="fa-solid fa-thumbs-up text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
+                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
+                    </a>
+                {% endif %}
+                <!-- Dislike Btn status -->
+                {% if current_user["_id"] in post["disliked_by"] %}
+                    <a href="" class="fa-solid fa-down-up text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
+                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
+                    </a>
+                {% else %}
+                    <a href="" class="fa-solid fa-thumbs-down text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
+                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
+                    </a>
+                {% endif %}
+                <!-- Love Btn status -->
+                {% if current_user["_id"] in post["disliked_by"] %}
+                    <a href="" class="fa-solid fa-heart text-2xl dark:text-red-600 text-red-600 hover:cursor-pointer">
+                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
+                    </a>
+                {% else %}
+                    <a href="" class="fa-solid fa-heart text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-red-600 hover:text-red-600">
+                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
+                    </a>
+                {% endif %}   
             </div>
+
+            <!-- If post if from current_user show EDIT/DELETE btn -->
             {% if current_user._id == post['author']._id %}
-            <div class="flex flex-row justify-between gap-2">
-                <button class="primary-btn py-1.5 px-2.5">EDIT POST</button>
-                <button class="danger-btn py-1.5 px-2.5">DELETE POST</button>
-            </div>
+                <div class="flex flex-row justify-between gap-2">
+                    <!-- <button class="primary-btn py-1.5 px-2.5">EDIT POST</button> -->
+                    <a href="{{ url_for('posts.edit_post', post_id=post['_id']) }}" class="primary-btn py-1.5 px-2.5">EDIT POST</a>
+                    <!-- <button class="danger-btn py-1.5 px-2.5">DELETE POST</button> -->
+                    <a href="{{ url_for('posts.delete_post', post_id=post['_id']) }}" class="danger-btn py-1.5 px-2.5">DELETE POST</a>
+                </div>
             {% endif %}
         </div>
     </div>

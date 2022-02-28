@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+{% block content %}
+    
+
+<div class="px-2">
+    <h1 class="text-2xl text-gray-800 dark:text-white font-normal py-6">Edit Topic</h1>
+    <hr class="border-gray-400 dark:border-gray-600 mb-6">
+    <!-- New Post Form -->
+    <form action="" enctype="multipart/form-data" method="POST" id="editTopicForm" class="space-y-6">
+        {{ form.csrf_token(id = "unique_id") }}
+        
+        <!-- Topic Title -->
+        <div>
+            {% if form.topicTitle.errors %}
+                {{ form.topicTitle.label(class="form-invalid-label text-lg") }}
+                <div class="relative">
+                    <div class="flex absolute inset-y-0 right-0 items-center pr-3 pointer-events-none">
+                        <span id="topicTitleCompter" class="text-gray-400 dark:text-gray-500 text-sm">50</span>
+                    </div>
+                    {{ form.topicTitle(class="form-invalid-input") }}
+                </div>
+                {% for error in form.topicTitle.errors %}
+                    <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ form.topicTitle.label(class="form-label text-lg") }}
+                <div class="relative">
+                    <div class="flex absolute inset-y-0 right-0 items-center pr-3 pointer-events-none">
+                        <span id="topicTitleCompter" class="text-gray-400 dark:text-gray-400 text-sm">50</span>
+                    </div>
+                    {{ form.topicTitle(class="form-input ") }}
+                </div>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Describe your topic well, while keeping the subject as short as possible.</p>
+            {% endif %}
+        </div>
+
+        <!-- Topic Body -->
+        <div>
+            {% if form.topicBody.errors %}
+                {{ form.topicBody.label(class="form-invalid-label text-lg") }}
+                    <div class="border-2 border-red-700">
+                    {{ form.topicBody(class="form-invalid-input", rows=6) }}
+                    </div>
+                {% for error in form.topicBody.errors %}
+                    <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ form.topicBody.label(class="form-label text-lg") }}
+                {{ form.topicBody(class="form-input", value="salut") }}
+            {% endif %}
+        </div>
+        <!-- Topic Media File -->
+        <div>
+            {% if form.topicMedia.errors %}
+                {{ form.topicMedia.label(class="form-invalid-label text-lg") }}
+                    {{ form.topicMedia(class="block w-full text-sm text-red-900 bg-red-50 rounded-lg border border-red-300 cursor-pointer dark:text-red-400 focus:outline-none focus:border-transparent dark:bg-red-700 dark:red-gray-600 dark:placeholder-red-400") }}
+                {% for error in form.topicMedia.errors %}
+                    <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ form.topicMedia.label(class="form-label text-lg") }}
+                {{ form.topicMedia(class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Only video/photo authorized.</p>
+            {% endif %}
+        </div>
+        <!-- Topic Category & Tags -->
+        <div class="flex mobile:flex-row flex-col justify-between space-y-6 mobile:space-y-0">
+            <!-- Category -->
+            <div class="w-60">
+                {% if form.categoryField.errors %}
+                    {{ form.categoryField.label(class="form-invalid-label text-lg") }}
+                    {{ form.categoryField(class="form-invalid-input") }}
+                    {% for error in form.categoryField.errors %}
+                        <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                    {% endfor %}
+               {% else %}
+                    {{ form.categoryField.label(class="form-label text-lg") }}
+                    {{ form.categoryField(class="form-input") }}
+                {% endif %}
+            </div>
+
+            <!-- Tags -->
+            <div class="w-full mobile:ml-8" id="mainTagsContainer">
+                {% if form.topicTags.errors %}
+                    {{ form.topicTags.label(class="form-invalid-label text-lg") }}
+                    {{ form.topicTags(class="form-invalid-input") }}
+                    {% for error in form.topicTags.errors %}
+                        <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                    {% endfor %}
+               {% else %}
+                    {{ form.topicTags.label(class="form-label text-lg") }}
+                    {{ form.topicTags(class="form-input") }}
+                {% endif %}
+                {{ form.newTopicTags(class="hidden") }}
+                <div id="invalidTagsLabel">
+                    <p class="form-error-message max-w-full" id="invalid-label-tags"></p>
+                </div>
+                <div class="mt-2 flex flex-row flex-wrap gap-2" id="newTopicTagsContainer"></div>
+            </div>
+        </div>
+
+        <!-- Submit & Cancel form -->
+        <div class="mt-16 flex flex-row mobile:justify-end justify-center">
+            <a class="danger-btn px-4 py-2.5 mobile:mr-4 ml-4 mobile:ml-0 mb-12 order-2 mobile:-order-1" href="{{ url_for('posts.single_post', post_id=post_id) }}">Cancel</a>
+            <input class="primary-btn px-3 py-2.5 mb-12" id="newPostSubmit" name="newPostSubmit" type="submit" value="Edit Post">
+            
+            
+        </div>
+
+    </form>
+</div>
+
+{{ ckeditor.load(pkg_type="full") }}
+{{ ckeditor.config(name='topicBody') }}
+
+
+
+
+{%  endblock content %}
