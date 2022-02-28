@@ -1,32 +1,7 @@
-let counter = 0
-// Listen to user clicking on the "load more" btn
-$("#loadingBtn").on("click", (e) => {
-    // increment counter by 5 (5 is the limit of posts loaded)
-    counter += 5
-    // update the loading btn state
-    $("#loadingText").text("Loading...")
-    $("#loadingIcon").removeClass("hidden")
-    // Ajax call to server
-    $.ajax({
-        type: 'GET',
-        url: '/load',
-        data: {
-            'c': counter // pass the counter as url paramters
-        },
-        success: function (response) {
-            // if counter is >= to the total of posts in the DB , no more post to load => update the loading btn
-            if(counter >= response.total) {
-                $("#loadingBtnContainer").html("<p class='text-white text-lg font-medium'>No more post to load</p>")
-            }else{
-                // populate the home page with new loaded posts
-                populateHomePage(response.result)
-            }
-        }
-    })
-})
+
 
 //Populate the home page with the posts lodaded by the ajax call
-let populateHomePage = (data) => {
+export let populateHomePage = (data) => {
     let html = ""
     // for each post in the data object 
     data.forEach(post => {
@@ -46,7 +21,7 @@ let populateHomePage = (data) => {
                 <td class="py-4 px-2 text-sm font-medium text-gray-900 dark:text-white text-center">
                     <div class="flex flex-row justify-left items-center">
                         <!-- Author Avatar -->
-                        <img class="rounded-full mr-4 w-10 h-10" src="static/media/profile_pics/${post.author.image}" alt="">
+                        <img class="rounded-full mr-4 w-10 h-10" src="/static/media/profile_pics/${post.author.image}" alt="">
                         <div class="flex flex-col w-full space-y-2">
                             <!-- Topic Title -->
                             <a href="/posts/${post._id.$oid}" class="text-left hover:text-blue-700 text-lg">${post.title}</a>

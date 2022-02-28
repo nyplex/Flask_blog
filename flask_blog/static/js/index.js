@@ -3,8 +3,7 @@ import "flowbite"
 import "./forms/forms"
 import "./forms/settings"
 import "./forms/newPost"
-import "./ajax/home"
-import "./ajax/categories"
+import "./ajax/load"
 import "./ckEditor"
 
 //Close the flash message when user click on the cls btn

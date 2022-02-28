@@ -1,34 +1,7 @@
-let counter = 0
-// Listen to user clicking on the "load more" btn
-$("#loadingBtnCategories").on("click", (e) => {
-    // increment counter by 5 (5 is the limit of posts loaded)
-    counter += 6
-    // update the loading btn state
-    $("#loadingText").text("Loading...")
-    $("#loadingIcon").removeClass("hidden")
-    // Ajax call to server
-    $.ajax({
-        type: 'GET',
-        url: '/categories/load',
-        data: {
-            'c': counter // pass the counter as url paramters
-        },
-        success: function (response) {
-            // if counter is >= to the total of posts in the DB , no more post to load => update the loading btn
-            if(counter >= response.total) {
-                $("#loadingBtnContainer").html("<p class='text-white text-lg font-medium'>No more post to load</p>")
-            }else{
-                console.log(response);
-                // populate the home page with new loaded posts
-                populateCategories(response.result)
-            }
-        }
-    })
-})
 
 
 //Populate the home page with the posts lodaded by the ajax call
-let populateCategories = (data) => {
+export let populateCategories = (data) => {
     let html = ""
     // for each post in the data object 
     data.forEach(post => {

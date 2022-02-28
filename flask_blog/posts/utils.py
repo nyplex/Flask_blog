@@ -74,12 +74,15 @@ def saveNewTopic(form):
         "title": re.sub("\s\s+", " ", form.topicTitle.data),
         "content": form.topicBody.data,
         "posted_date": datetime.now(),
-        "like": 0,
         "category": category_id["_id"],
         "tags": tagsList,
         "media": filename,
+        "like": 0,
+        "liked_by": [],
         "dislike": 0,
+        "disliked_by": [],
         "love": 0,
+        "loved_by": [],
         "comments": []
     })
     cat = mongo.db.categories.find_one(category_id)
