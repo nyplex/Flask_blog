@@ -26,8 +26,7 @@ class NewTopicForm(FlaskForm):
                          render_kw={"placeholder": "Let's get started"})
 
     topicMedia = FileField("Topic Media", validators=[
-                           FileAllowed(["jpg", "jpeg", "png", "avi", "mp4",
-                                       "gif", "m4v", "mkv", "mov", "mpeg", "mpg", "wmv"]),
+                           FileAllowed(["jpg", "jpeg", "png"]),
                            FileSize(max_size=536870912,
                                     message="File too large! Maximum 512MB")])
 

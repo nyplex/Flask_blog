@@ -153,3 +153,111 @@ def update_post_data(post):
         del postArray[0]["author"][key]
         
     return postArray
+
+
+def feel_post(post_id, feeling):
+    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    dislike = post['dislike']
+    disliked_by = post['disliked_by']
+    love = post['love']
+    loved_by = post['loved_by']
+    
+    if current_user._id in post['disliked_by']:
+        dislike = post['dislike'] -1
+        disliked_by = post['disliked_by']
+        disliked_by.remove(current_user['_id'])
+    
+    if current_user._id in post['loved_by']:
+        love = post['love'] -1
+        loved_by = post['loved_by']
+        loved_by.remove(current_user['_id'])
+        
+    if current_user._id in post["liked_by"]:
+        like = post['like'] - 1
+        likedBy = post['liked_by']
+        likedBy.remove(current_user["_id"])
+    else:
+        like = post['like'] + 1
+        likedBy = post['liked_by']
+        likedBy.append(current_user["_id"])
+
+    mongo.db.posts.update_one({"_id": ObjectId(post_id)}, {"$set": {
+        "like": like,
+        "liked_by": likedBy,
+        "dislike": dislike,
+        "disliked_by": disliked_by,
+        "love": love,
+        "loved_by": loved_by
+    }})
+
+
+def dislike_post(post_id, feeling):
+    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    like = post['like']
+    liked_by = post['liked_by']
+    love = post['love']
+    loved_by = post['loved_by']
+    
+    if current_user._id in post['liked_by']:
+        like = post['like'] -1
+        liked_by = post['liked_by']
+        liked_by.remove(current_user['_id'])
+    
+    if current_user._id in post['loved_by']:
+        love = post['love'] -1
+        loved_by = post['loved_by']
+        loved_by.remove(current_user['_id'])
+        
+    if current_user._id in post["disliked_by"]:
+        dislike = post['dislike'] - 1
+        disliked_by = post['disliked_by']
+        disliked_by.remove(current_user["_id"])
+    else:
+        dislike = post['dislike'] + 1
+        disliked_by = post['disliked_by']
+        disliked_by.append(current_user["_id"])
+
+    mongo.db.posts.update_one({"_id": ObjectId(post_id)}, {"$set": {
+        "like": like,
+        "liked_by": liked_by,
+        "dislike": dislike,
+        "disliked_by": disliked_by,
+        "love": love,
+        "loved_by": loved_by
+    }})
+
+
+def love_post(post_id, feeling):
+    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    like = post['like']
+    liked_by = post['liked_by']
+    dislike = post['dislike']
+    disliked_by = post['disliked_by']
+    
+    if current_user._id in post['liked_by']:
+        like = post['like'] -1
+        liked_by = post['liked_by']
+        liked_by.remove(current_user['_id'])
+    
+    if current_user._id in post['disliked_by']:
+        dislike = post['dislike'] -1
+        disliked_by = post['disliked_by']
+        disliked_by.remove(current_user['_id'])
+        
+    if current_user._id in post["loved_by"]:
+        love = post['love'] - 1
+        loved_by = post['loved_by']
+        loved_by.remove(current_user["_id"])
+    else:
+        love = post['love'] + 1
+        loved_by = post['loved_by']
+        loved_by.append(current_user["_id"])
+
+    mongo.db.posts.update_one({"_id": ObjectId(post_id)}, {"$set": {
+        "like": like,
+        "liked_by": liked_by,
+        "dislike": dislike,
+        "disliked_by": disliked_by,
+        "love": love,
+        "loved_by": loved_by
+    }})

@@ -4,7 +4,9 @@ from flask_blog.users.forms import SignupForm, LoginForm, SettingsForm
 from flask_blog.models import User
 from datetime import datetime
 from flask_blog.users.utils import create_username, validate_settings
+from flask_blog.posts.utils import update_posts_data, update_post_data
 from flask_login import login_user, current_user, logout_user
+from bson import ObjectId
 
 users = Blueprint("users", __name__)
 
@@ -75,20 +77,19 @@ def logout():
     return redirect(url_for("users.login"))
 
 
-@users.route("/profile", methods=["GET", "POST"])
-def profile():
-    ##########################################
+@users.route("/profile/<user_id>", methods=["GET", "POST"])
+def profile(user_id):
+
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
-    ##########################################
-    return render_template("profile.html", title="Profile", settingsForm=settingsForm)
 
+    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    postsCount = len(list(mongo.db.posts.find(
+        {"author": ObjectId(user_id)})))
+    posts = mongo.db.posts.find({"author": ObjectId(user_id)}).sort("posted_date", -1)
+    updated_post = update_posts_data(posts)
 
-@users.route("/users/<user_id>")
-def single_user():
-    ##########################################
-    settingsForm = SettingsForm()
-    if settingsForm.validate_on_submit():
-        validate_settings(settingsForm)
-    ##########################################
+    return render_template("profile.html", title="Profile", 
+                           settingsForm=settingsForm, user=user, 
+                           postsCount=postsCount, posts=updated_post)

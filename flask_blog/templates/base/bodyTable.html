@@ -1,0 +1,40 @@
+ <!-- Table Body -->
+ <tbody class="bg-gray-100 divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700" id="postsContent">
+    {% for post in posts %}
+        <!-- Post Row -->
+        <tr id="post_template">
+            <!--  Topic Col -->
+            <td class="py-4 px-2 text-sm font-medium text-gray-900 dark:text-white text-center">
+                <div class="flex flex-row justify-left items-center">
+                    <!-- Author Avatar -->
+                    <img class="rounded-full mr-4 w-10 h-10" src="{{ url_for('static', filename='media/profile_pics/' + post['author'].image) }}" alt="">
+                    <div class="flex flex-col w-full space-y-2">
+                        <!-- Topic Title -->
+                        <a href="{{ url_for('posts.single_post', post_id=post['_id']) }}" class="text-left hover:text-blue-700 text-lg">{{ post['title'] }}</a>
+                        <!-- Topic Tags -->
+                        <div class="flex flex-row flex-wrap gap-2">
+                            {% for tag in post["tags"] %}
+                                <span class="primary-tags"><i class="fa-solid fa-hashtag"></i> {{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <!-- Category Col -->
+            <td class="hidden lg:table-cell py-4 px-2 text-sm font-medium text-gray-500 dark:text-white text-center">
+                <!-- Topic Category -->
+                <a href="{{ url_for('main.home', category_id=post['category']._id) }}">
+                    <span class="category-label-{{ post['category'].category_color }}">{{ post['category'].category_name|capitalize}}</span>
+                </a>
+            </td>
+            <!-- Like Col -->
+            <td class="hidden lg:table-cell py-4 px-2 text-sm font-medium text-gray-900 dark:text-white text-center">
+                <span>{{ post.like }}</span><i class="fa-solid fa-thumbs-up ml-2"></i>
+            </td>
+            <!-- Activity Col -->
+            <td class="py-4 px-2 text-sm font-medium text-gray-500 dark:text-white text-center">
+                <span class="text-gray-600">{{ post['posted_date'] }}</span>
+            </td>
+        </tr><!-- End Post Row -->
+    {% endfor %}
+</tbody>
