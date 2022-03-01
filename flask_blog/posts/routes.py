@@ -5,7 +5,7 @@ from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
 from flask_blog.users.utils import validate_settings
 from flask_blog.posts.forms import NewTopicForm
-from flask_blog.posts.utils import saveNewTopic, update_post_data, edit_db_post
+from flask_blog.posts.utils import saveNewTopic, update_post_data, edit_db_post, feel_post, dislike_post, love_post
 from flask_blog.models import Post
 from bson import ObjectId
 
@@ -104,23 +104,15 @@ def delete_post(post_id):
     return redirect(url_for("main.home"))
 
 
-@posts.route("/like-post/<post_id>", methods=["GET", "POST"])
+@posts.route("/like-post/<post_id>/<feeling>", methods=["GET", "POST"])
 @login_required
-def like_post(post_id):
+def like_post(post_id, feeling):
 
-    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
-    if current_user._id in post["liked_by"]:
-        like = post['like'] - 1
-        likedBy = post['liked_by']
-        likedBy.remove(current_user["_id"])
-    else:
-        like = post['like'] + 1
-        likedBy = post['liked_by']
-        likedBy.append(current_user["_id"])
-
-    mongo.db.posts.update_one({"_id": ObjectId(post_id)}, {"$set": {
-        "like": like,
-        "liked_by": likedBy
-    }})
+    if feeling == "like":
+        feel_post(post_id, "like")
+    elif feeling == "dislike":
+        dislike_post(post_id, "dislike")
+    elif feeling == "love":
+        love_post(post_id, "love")
 
     return redirect(url_for("posts.single_post", post_id=post_id))

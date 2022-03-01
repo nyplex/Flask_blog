@@ -87,3 +87,21 @@ def load_data():
         }
 
     return make_response(jsonify(result))
+
+
+@main.route("/live-search", methods=["GET", "POST"])
+def live_search():
+    json_docs = []
+    if request.method == "POST":
+        data = request.values.get('input')
+        if data == "":
+            posts = mongo.db.posts.find()
+        else:
+            posts = mongo.db.posts.find({"title": {"$regex": data}})
+        
+        for data in posts:
+            dataArray = update_post_data(data)
+            json_doc = json.dumps(dataArray, default=json_util.default)
+            json_docs.append(json_doc)
+        
+    return make_response(jsonify(json_docs))

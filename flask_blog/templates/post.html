@@ -10,7 +10,7 @@
         <div class="flex flex-row justify-between">
             <div class="flex flex-row items-center">
                 <img src="{{ url_for('static', filename='media/profile_pics/' + post['author'].image) }}" class="rounded-full mr-4 w-16 h-16" alt="">
-                <a href="" class="navbar-unactive-link text-lg font-medium">@{{ post['author'].username|capitalize }}</a>
+                <a href="{{ url_for('users.profile', user_id=post['author']._id) }}" class="navbar-unactive-link text-lg font-medium">@{{ post['author'].username|capitalize }}</a>
             </div>
             <div class="mobile:flex flex-row justify-between items-center hidden">
                 <i class="fa-solid fa-clock text-lg dark:text-gray-600 text-gray-400 mr-2"></i>
@@ -41,31 +41,31 @@
             <div class="flex flex-row gap-8">
                 <!-- Like Btn status -->
                 {% if current_user["_id"] in post["liked_by"] %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id']) }}" class="fa-solid fa-thumbs-up text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='like') }}" class="fa-solid fa-thumbs-up text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
                         </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
                     </a>
                 {% else %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id']) }}" class="fa-solid fa-thumbs-up text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='like') }}" class="fa-solid fa-thumbs-up text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
                         </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
                     </a>
                 {% endif %}
                 <!-- Dislike Btn status -->
                 {% if current_user["_id"] in post["disliked_by"] %}
-                    <a href="" class="fa-solid fa-down-up text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='dislike') }}" class="fa-solid fa-thumbs-down text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
                         </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
                     </a>
                 {% else %}
-                    <a href="" class="fa-solid fa-thumbs-down text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='dislike') }}" class="fa-solid fa-thumbs-down text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
                         </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
                     </a>
                 {% endif %}
                 <!-- Love Btn status -->
-                {% if current_user["_id"] in post["disliked_by"] %}
-                    <a href="" class="fa-solid fa-heart text-2xl dark:text-red-600 text-red-600 hover:cursor-pointer">
+                {% if current_user["_id"] in post["loved_by"] %}
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='love') }}" class="fa-solid fa-heart text-2xl dark:text-red-600 text-red-600 hover:cursor-pointer">
                         </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
                     </a>
                 {% else %}
-                    <a href="" class="fa-solid fa-heart text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-red-600 hover:text-red-600">
+                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='love') }}" class="fa-solid fa-heart text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-red-600 hover:text-red-600">
                         </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
                     </a>
                 {% endif %}   

@@ -1,7 +1,21 @@
+import { populateHomePage } from "./home"
 
 
-//Populate the home page with the posts lodaded by the ajax call
-export let populateHomePage = (data) => {
+$("#posts_search").on("input", (e) => {
+    let value = $(e.target).val()
+    $.ajax({
+        type: 'POST',
+        url: '/live-search',
+        data: {
+            'input': value, // pass the counter as url paramters
+        },
+        success: function (response) {
+            populateLiveSearch(response)
+        }
+    })
+})
+
+export let populateLiveSearch = (data) => {
     let html = ""
     // for each post in the data object 
     data.forEach(post => {
@@ -51,11 +65,5 @@ export let populateHomePage = (data) => {
         `
     });
     //Append the html content of each post to the main table container
-    $("#postsContent").append(html)
-    //Update the state of the loading btn
-    $("#loadingText").text("Loading more")
-    $("#loadingIcon").addClass("hidden")
-    //scroll down to the page after appeding the new posts
-    let toScroll = $(document).height() - $(window).height()
-    $("html, body").animate({ scrollTop: toScroll }, "slow")
+    $("#postsContent").html(html)
 }

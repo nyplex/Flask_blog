@@ -1,7 +1,61 @@
 {% extends "layout.html" %}
 {% block content %}
     
-<h1 class="text-2xl font-bold text-black text-center dark:text-white">PROFILE PAGE</h1>
+<div class="max-w-7xl mx-auto mt-4 mobile:mb-12 mb-4 p-4">
+    <div class="flex flex-row justify-between items-center">
+        <div class="flex flex-row items-center">
+            <img src="{{ url_for('static', filename='media/profile_pics/' + user.image) }}" alt="User's Avatar" class="rounded-full mobile:w-24 mobile:h-24 w-16 h-16">
+            <div>
+                <h1 class="text-gray-800 dark:text-gray-300 mobile:text-2xl text-xl font-medium mobile:ml-4 ml-2">@{{ user.username|capitalize }}</h1>
+                <p class="ml-2 mobile:ml-4 text-gray-700 dark:text-gray-500 mobile:text-xl text-lg mt-2">{{ postsCount }} threads</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="flex flex-col max-w-7xl mx-auto mt-4 mobile:px-2 mobile:mb-12 mb-4">
+    <div class="overflow-x-auto sm:rounded-lg">
+        <div class="inline-block min-w-full align-middle">
+            <div class="overflow-hidden ">
+                <table class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
+                    <!-- Table Header  -->
+                    <thead class="bg-transparent" id="testAjax">
+                        <!-- Table Row Header -->
+                        <tr class="bg-gray-200 dark:bg-gray-700 mt-4">
+                            <!-- Topic Row -->
+                            <th scope="col" class="py-2 px-2 text-sm font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                                <a href="{{ url_for('main.home', sort='title') }}" class="hover:text-blue-700">
+                                    <span>Topic</span>
+                                </a>
+                            </th>
+                            <!-- Category Row -->
+                            <th scope="col" class="hidden lg:table-cell py-2 px-2 text-sm font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
+                                <a href="" class="hover:text-blue-700">
+                                    <span>Category</span>
+                                </a>
+                            </th>
+                            <!-- Likes Row -->
+                            <th scope="col" class="hidden lg:table-cell py-2 px-2 text-sm font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
+                                <a href="" class="hover:text-blue-700">
+                                    <span>Likes</span>
+                                </a>
+                            </th>
+                            <!-- Activity Row -->
+                            <th scope="col" class="w-0 mobile:w-auto py-2 px-2 text-sm font-medium tracking-wider text-center text-gray-700 uppercase dark:text-gray-400">
+                                <a href="" class="hover:text-blue-700 whitespace-nowrap">
+                                    <span>Activity</span>
+                                </a>
+                            </th>
+                        </tr><!-- End Table Row Header -->
+                    </thead><!-- End Table Header -->
+
+                   {% include 'base/bodyTable.html'%}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 {%  endblock content %}

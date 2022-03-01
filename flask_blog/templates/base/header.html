@@ -50,7 +50,7 @@
                     </div>
                     <!-- User Menu Links -->
                     <ul class="py-1" aria-labelledby="dropdown">
-                        <li><a href="{{ url_for('users.profile') }}" class="user-link">Profile</a></li>
+                        <li><a href="{{ url_for('users.profile', user_id=current_user._id) }}" class="user-link">Profile</a></li>
                         <li>
                             <button class="user-link w-full text-left" id="settings_btn">Settings</button>
                         </li>
