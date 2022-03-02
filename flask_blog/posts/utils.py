@@ -119,6 +119,9 @@ def edit_db_post(form, post_id):
         "tags": tagsList,
         "media": filename
     }})
+    cat = mongo.db.categories.find_one(category_id)
+    count = cat["count"]
+    mongo.db.categories.update_one(category_id, {"$set":{"count": count + 1}})
 
 def update_posts_data(posts):
     updated_posts = []

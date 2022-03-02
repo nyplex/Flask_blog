@@ -70,6 +70,9 @@ def edit_post(post_id):
         editTopicForm.categoryField.data = editTopicForm.categoryField.data
 
         if "newPostSubmit" in request.form and editTopicForm.validate_on_submit():
+            cat = mongo.db.categories.find_one(post['category'])
+            count = cat["count"]
+            mongo.db.categories.update_one(post['category'], {"$set":{"count": count - 1}})
             edit_db_post(editTopicForm, post_id)
             flash("Edtit sucess", "flash-success")
 

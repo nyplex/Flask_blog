@@ -102,7 +102,7 @@ def live_search():
         if data == "":
             posts = mongo.db.posts.find()
         else:
-            posts = mongo.db.posts.find({"title": {"$regex": data}})
+            posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}})
         
         for data in posts:
             dataArray = update_post_data(data)
