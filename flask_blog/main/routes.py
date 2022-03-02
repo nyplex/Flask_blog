@@ -22,11 +22,16 @@ def home(**category_id):
         posts = mongo.db.posts.find({"category": ObjectId(category_id['category_id'])}).sort(
             "posted_date", -1).limit(5)
         data_category = category["category_name"]
+        updated_post = update_posts_data(posts)
+        return render_template("category.html",
+                           page_title="Home Page", active_link="home",
+                           settingsForm=settingsForm, posts=updated_post, data_category=data_category)
     else:
         data_category = "multi"
         posts = mongo.db.posts.find().sort("posted_date", -1).limit(5)
+        updated_post = update_posts_data(posts)
 
-    updated_post = update_posts_data(posts)
+    
 
     return render_template("home.html",
                            page_title="Home Page", active_link="home",
