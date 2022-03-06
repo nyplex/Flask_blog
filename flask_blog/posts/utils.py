@@ -110,7 +110,7 @@ def edit_db_post(form, post_id):
         else:
             filename = saveTopicVideo(form.topicMedia.data)
     else:
-        filename = None
+        filename = post['media']
     # Create new Post object to save inDB
     mongo.db.posts.update_one(post, {"$set": {
         "title": re.sub("\s\s+", " ", form.topicTitle.data),
