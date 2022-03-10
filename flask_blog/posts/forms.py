@@ -20,10 +20,9 @@ class NewTopicForm(FlaskForm):
                                          Length(min=5, max=50)],
                              render_kw={"placeholder": "Subject of your topic"})
 
-
     topicBody = CKEditorField('Topic Body', validators=[DataRequired(),
-                                             Length(min=10, max=10000)],
-                         render_kw={"placeholder": "Let's get started"})
+                                                        Length(min=10, max=10000)],
+                              render_kw={"placeholder": "Let's get started"})
 
     topicMedia = FileField("Topic Media", validators=[
                            FileAllowed(["jpg", "jpeg", "png"]),
@@ -32,7 +31,6 @@ class NewTopicForm(FlaskForm):
 
     categoryField = SelectField(
         u"Category", choices=choices, validators=[DataRequired()])
-
 
     topicTags = StringField(
         "Tags", render_kw={"placeholder": "Use comma to separate tags"})
@@ -49,9 +47,16 @@ class NewTopicForm(FlaskForm):
             topicTags.data = ""
             raise ValidationError(
                 'You can not have more than 5 tags')
-    
+
     def validate_topicBody(self, topicBody):
         if len(topicBody.data) < 17 or len(topicBody.data) > 10000:
             raise ValidationError(
                 'Topic body must be between 10 and 10.000 characters')
-            
+
+
+class NewCommentForm(FlaskForm):
+
+    commentBody = TextAreaField('Your comment', validators=[DataRequired(), Length(
+        max=5000)], render_kw={"placeholder": "Write your comment here..."})
+    
+    newCommentSubmit = SubmitField("Comment!")

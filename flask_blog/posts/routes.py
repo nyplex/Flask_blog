@@ -4,10 +4,12 @@ from flask_login import current_user, login_required
 from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
 from flask_blog.users.utils import validate_settings
-from flask_blog.posts.forms import NewTopicForm
-from flask_blog.posts.utils import saveNewTopic, update_post_data, edit_db_post, feel_post, dislike_post, love_post
-from flask_blog.models import Post
+from flask_blog.posts.forms import NewCommentForm, NewTopicForm
+from flask_blog.posts.utils import saveNewTopic, update_post_data, edit_db_post, feel_post, dislike_post, love_post, update_comments_data
+from flask_blog.models import Comments
 from bson import ObjectId
+from datetime import datetime
+import re
 
 
 posts = Blueprint("posts", __name__)
@@ -41,19 +43,36 @@ def new_post():
 @login_required
 def single_post(post_id):
 
+    commentForm = NewCommentForm()
     settingsForm = SettingsForm()
-    if settingsForm.validate_on_submit():
-        validate_settings(settingsForm)
+    if request.method == "POST":
+        if "newCommentSubmit" in request.form and commentForm.validate_on_submit():
+            
+            newTopic = Comments({
+            "author": current_user["_id"],
+            "body": re.sub("\s\s+", " ", commentForm.commentBody.data),
+            "posted_date": datetime.now(),
+            "post": ObjectId(post_id)
+            })
+            mongo.db.comments.insert_one(newTopic)
+            flash("Comment posted!", "flash-success")
+            return redirect(url_for("posts.single_post", post_id=post_id))
+            
+        elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
+            validate_settings(settingsForm)
 
     # get post from DB using post_id
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    comments = mongo.db.comments.find({"post": ObjectId(post_id)})
     posted_date = post['posted_date']
     update_post_data(post)
+    update_comments = update_comments_data(comments)
     post['posted_date'] = posted_date
     content = post['content']
-
     return render_template("post.html", post=post,
-                           settingsForm=settingsForm, content=content)
+                           settingsForm=settingsForm, 
+                           content=content, comments=update_comments, 
+                           form=commentForm)
 
 
 @posts.route("/edit-post/<post_id>", methods=["GET", "POST"])
@@ -72,7 +91,8 @@ def edit_post(post_id):
         if "newPostSubmit" in request.form and editTopicForm.validate_on_submit():
             cat = mongo.db.categories.find_one(post['category'])
             count = cat["count"]
-            mongo.db.categories.update_one(post['category'], {"$set":{"count": count - 1}})
+            mongo.db.categories.update_one(
+                post['category'], {"$set": {"count": count - 1}})
             edit_db_post(editTopicForm, post_id)
             flash("Edtit sucess", "flash-success")
 
@@ -119,3 +139,18 @@ def like_post(post_id, feeling):
         love_post(post_id, "love")
 
     return redirect(url_for("posts.single_post", post_id=post_id))
+
+
+@posts.route("/delete-comment/<comment_id>/<post_id>", methods=["GET", "POST"])
+@login_required
+def delete_comment(comment_id, post_id):
+
+    comment = mongo.db.comments.find_one({'_id': ObjectId(comment_id)})
+    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    if comment['author'] == current_user._id or post['author'] == current_user._id:
+        mongo.db.comments.delete_one({"_id": ObjectId(comment_id)})
+        flash("Comment deleted!", "flash-success")
+        return redirect(url_for("posts.single_post", post_id=post_id))
+    else:
+        flash("You are not authorized to delete this comment!", "flash-danger")
+        return redirect(url_for("posts.single_post", post_id=post_id))
