@@ -1,7 +1,6 @@
 from email import message
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileSize
-from numpy import kaiser
 from wtforms import StringField, SubmitField, ValidationError, TextAreaField, HiddenField, SelectField
 from wtforms.validators import DataRequired, Length
 from flask_ckeditor import CKEditorField
