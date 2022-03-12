@@ -1,9 +1,10 @@
-from flask import Blueprint, request, render_template, jsonify, make_response
+from flask import Blueprint, request, render_template, jsonify, make_response, current_app
 from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
 from flask_blog.users.utils import validate_settings
 from flask_blog.posts.utils import update_posts_data, update_post_data
 from bson import ObjectId, json_util
+from flask_login import login_required
 import json
 
 main = Blueprint("main", __name__)
@@ -12,6 +13,7 @@ main = Blueprint("main", __name__)
 @main.route("/", methods=["GET", "POST"])
 @main.route("/home", methods=["GET", "POST"])
 @main.route("/categories/<category_id>", methods=["GET", "POST"])
+@login_required
 def home(**category_id):
 
     settingsForm = SettingsForm()
@@ -39,6 +41,7 @@ def home(**category_id):
 
 
 @main.route("/categories", methods=["GET", "POST"])
+@login_required
 def categories():
 
     categories = mongo.db.categories.find().sort("category_name", 1).limit(6)
@@ -53,6 +56,7 @@ def categories():
 
 
 @main.route("/load", methods=["GET"])
+@login_required
 def load_data():
 
     limit = 6
@@ -95,6 +99,7 @@ def load_data():
 
 
 @main.route("/live-search", methods=["GET", "POST"])
+@login_required
 def live_search():
     json_docs = []
     if request.method == "POST":

@@ -5,7 +5,7 @@ from flask_blog.models import User
 from datetime import datetime
 from flask_blog.users.utils import create_username, validate_settings
 from flask_blog.posts.utils import update_posts_data, update_post_data
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from bson import ObjectId
 
 users = Blueprint("users", __name__)
@@ -70,6 +70,7 @@ def signup():
 
 
 @users.route("/logout")
+@login_required
 def logout():
     if current_user.is_authenticated:
         logout_user()
@@ -78,6 +79,7 @@ def logout():
 
 
 @users.route("/profile/<user_id>", methods=["GET", "POST"])
+@login_required
 def profile(user_id):
 
     settingsForm = SettingsForm()

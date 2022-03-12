@@ -1,3 +1,4 @@
+from ast import Return
 from time import strftime
 from flask import Blueprint, flash, redirect, request, render_template, url_for, jsonify, make_response
 from flask_login import current_user, login_required
@@ -10,6 +11,7 @@ from flask_blog.models import Comments
 from bson import ObjectId
 from datetime import datetime
 import re
+from flask_blog.errors.handlers import error_404 
 
 
 posts = Blueprint("posts", __name__)
@@ -25,9 +27,11 @@ def new_post():
     if request.method == "POST":
         if "newPostSubmit" in request.form and newTopicForm.validate_on_submit():
             saveNewTopic(newTopicForm)
+            getPost = mongo.db.posts.find({'author': ObjectId(current_user._id)}).sort("_id", -1).limit(1)
+            postID = getPost[0]['_id']
             flash("New Topic successfully posted!", "flash-success")
 
-            return redirect(url_for("posts.new_post"))
+            return redirect(url_for("posts.single_post", post_id=postID))
 
         elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
@@ -41,8 +45,7 @@ def new_post():
 
 @posts.route("/posts/<post_id>", methods=["GET", "POST"])
 @login_required
-def single_post(post_id):
-
+def single_post(post_id):        
     commentForm = NewCommentForm()
     settingsForm = SettingsForm()
     if request.method == "POST":
@@ -62,8 +65,12 @@ def single_post(post_id):
             validate_settings(settingsForm)
 
     # get post from DB using post_id
-    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
-    comments = mongo.db.comments.find({"post": ObjectId(post_id)})
+    try:
+        post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+        comments = mongo.db.comments.find({"post": ObjectId(post_id)})
+    except:
+        return error_404("error")
+    
     posted_date = post['posted_date']
     update_post_data(post)
     update_comments = update_comments_data(comments)
