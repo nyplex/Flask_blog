@@ -3,11 +3,13 @@ import { populateHomePage } from "./home"
 
 $("#posts_search").on("input", (e) => {
     let value = $(e.target).val()
+    let liveSearchCategory = $("#posts_search").data("livesearchcategory")
     $.ajax({
         type: 'POST',
         url: '/live-search',
         data: {
-            'input': value, // pass the counter as url paramters
+            'input': value, 
+            'liveSearchCategory': liveSearchCategory
         },
         success: function (response) {
             populateLiveSearch(response)

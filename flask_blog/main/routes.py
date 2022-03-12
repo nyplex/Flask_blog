@@ -11,7 +11,6 @@ main = Blueprint("main", __name__)
 
 
 @main.route("/", methods=["GET", "POST"])
-@main.route("/home", methods=["GET", "POST"])
 @main.route("/categories/<category_id>", methods=["GET", "POST"])
 @login_required
 def home(**category_id):
@@ -24,12 +23,12 @@ def home(**category_id):
         posts = mongo.db.posts.find({"category": ObjectId(category_id['category_id'])}).sort(
             "posted_date", -1).limit(5)
         data_category = category["category_name"]
+        liveSearchCategory = category["_id"]
         updated_post = update_posts_data(posts)
-        return render_template("category.html",
-                           page_title="Home Page", active_link="home",
-                           settingsForm=settingsForm, posts=updated_post, data_category=data_category)
+
     else:
         data_category = "multi"
+        liveSearchCategory = "liveSearchCategory"
         posts = mongo.db.posts.find().sort("posted_date", -1).limit(5)
         updated_post = update_posts_data(posts)
 
@@ -37,7 +36,7 @@ def home(**category_id):
 
     return render_template("home.html",
                            page_title="Home Page", active_link="home",
-                           settingsForm=settingsForm, posts=updated_post, data_category=data_category)
+                           settingsForm=settingsForm, posts=updated_post, data_category=data_category, liveSearchCategory=liveSearchCategory)
 
 
 @main.route("/categories", methods=["GET", "POST"])
@@ -104,10 +103,20 @@ def live_search():
     json_docs = []
     if request.method == "POST":
         data = request.values.get('input')
-        if data == "":
-            posts = mongo.db.posts.find()
+        liveSearchCategory = request.values.get('liveSearchCategory')
+        
+        
+        if liveSearchCategory == "liveSearchCategory":
+            if data == "":
+                posts = mongo.db.posts.find()
+            else:
+                posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}})
         else:
-            posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}})
+            if data == "":
+                posts = mongo.db.posts.find({"category": ObjectId(liveSearchCategory)})
+            else:
+                posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}, "category": ObjectId(liveSearchCategory)})
+
         
         for data in posts:
             dataArray = update_post_data(data)
