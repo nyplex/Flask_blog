@@ -1,5 +1,3 @@
-from ast import Return
-from time import strftime
 from flask import Blueprint, flash, redirect, request, render_template, url_for, jsonify, make_response
 from flask_login import current_user, login_required
 from flask_blog import mongo
@@ -8,7 +6,8 @@ from flask_blog.users.utils import validate_settings
 from flask_blog.posts.forms import NewCommentForm, NewTopicForm
 from flask_blog.posts.utils import saveNewTopic, update_post_data, edit_db_post, feel_post, dislike_post, love_post, update_comments_data
 from flask_blog.models import Comments
-from bson import ObjectId
+from bson import ObjectId, json_util
+import json
 from datetime import datetime
 import re
 from flask_blog.errors.handlers import error_404 
@@ -49,8 +48,12 @@ def single_post(post_id):
     commentForm = NewCommentForm()
     settingsForm = SettingsForm()
     if request.method == "POST":
-        if "newCommentSubmit" in request.form and commentForm.validate_on_submit():
-            
+        
+        if "settingsSubmit" in request.form and settingsForm.validate_on_submit():
+            validate_settings(settingsForm)
+        
+        elif commentForm.validate_on_submit():
+            print("therrrre")
             newTopic = Comments({
             "author": current_user["_id"],
             "body": re.sub("\s\s+", " ", commentForm.commentBody.data),
@@ -59,10 +62,7 @@ def single_post(post_id):
             })
             mongo.db.comments.insert_one(newTopic)
             flash("Comment posted!", "flash-success")
-            return redirect(url_for("posts.single_post", post_id=post_id))
-            
-        elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
-            validate_settings(settingsForm)
+            return "hello world"
 
     # get post from DB using post_id
     try:
@@ -168,3 +168,25 @@ def delete_comment(comment_id, post_id):
     else:
         flash("You are not authorized to delete this comment!", "flash-danger")
         return redirect(url_for("posts.single_post", post_id=post_id))
+
+
+@posts.route("/load-comments/<post_id>", methods=["GET", "POST"])
+@login_required
+def load_comments(post_id):
+    json_docs = []
+    
+    comments = mongo.db.comments.find({"post": ObjectId(post_id)})
+    dataLen = len(list(mongo.db.comments.find({"post": ObjectId(post_id)})))
+    
+    for comment in comments:
+        dataArray = update_comments_data([comment])
+        json_doc = json.dumps(dataArray, default=json_util.default)
+        json_docs.append(json_doc)
+    
+
+    result = {
+        "result": json_docs,
+        "counts": dataLen
+    }
+    
+    return make_response(jsonify(result))

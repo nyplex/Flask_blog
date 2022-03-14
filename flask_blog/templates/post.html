@@ -77,9 +77,9 @@
                 {% endif %} 
 
                 <!-- New comment toggle -->
-                <button class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="authentication-modal">
-                    Comment
-                </button>
+                <div  id="commentsBtn" data-postid="{{post['_id']}}">
+                    <i class="fa-solid fa-message likeBtn"></i><span class="ml-1 text-base dark:text-gray-400">{{ comments|length }}</span>
+                </div>
             </div>
             
             <!-- If post if from current_user show EDIT/DELETE btn -->
@@ -96,37 +96,11 @@
 </div>
 
 <!-- COMMENTS SECTION -->
-<div class="max-w-7xl mx-auto mobile:mb-12 mb-4 rounded-lg">
-    <div>
-        <h2 class="dark:text-gray-100 text-gray-800 font-medium text-2xl mb-4 pl-2">{{ comments|length }} comment{% if comments|length > 1 %}s {% endif %}</h2>
-    </div>
-    {% for comment in comments %}
-        <div class="max-w-full dark:bg-gray-800 bg-gray-100 w-full rounded-lg p-4 shadow-lg mb-4">
-            <div class="flex flex-row justify-between">
-                <div class="flex flex-row justify-left items-center">
-                    <!-- Author Avatar -->
-                    <img class="rounded-full mr-4 w-10 h-10" src="{{ url_for('static', filename='media/profile_pics/' + comment['author'].image) }}" alt="">
-                    <div class="flex flex-col w-full space-y-2">
-                        <!-- Topic Title -->
-                        <a href="" class="navbar-unactive-link text-lg font-medium">{{ comment['author']['username'] }}</a>
-                    </div>
-                </div>
-                <div class="mobile:flex flex-row justify-between items-center hidden">
-                    <i class="fa-solid fa-clock text-lg dark:text-gray-600 text-gray-400 mr-2"></i>
-                    <span class="text-gray-600">{{ comment['posted_date'] }}</span>
-                </div>
-            </div>
-            <div class="mt-2">
-                <p class="font-medium text-lg dark:text-gray-100 text-gray-800">{{ comment['body'] }}</p>
-            </div>
-            {% if comment['author']['_id'] == current_user._id or post['author']['_id'] == current_user._id %}
-            <div class="mt-2 flex flex-row justify-end">
-                <a href="{{ url_for('posts.delete_comment', comment_id=comment['_id'], post_id=post['_id']) }}"><button class="danger-btn py-1.5 px-2.5">DELETE</button></a>
-            </div>
-            {% endif %}
-        </div>
-    {% endfor %}
+<div class="max-w-7xl mx-auto">
+    <button class='primary-btn py-1 px-2 mb-4 hidden' data-modal-toggle='authentication-modal' id="addCommentBtn">Add comment</button>
 </div>
+
+<div class="max-w-7xl mx-auto mobile:mb-12 mb-4 rounded-lg hidden" id="commentsContainer"> </div>
 
 <!-- New comment modal -->
 <div id="authentication-modal" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal md:h-full md:inset-0">
@@ -138,7 +112,7 @@
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
                 </button>
             </div>
-            <form class="px-6 pb-4 lg:px-8 sm:pb-6 xl:pb-8" action="#" method="POST">
+            <form class="px-6 pb-4 lg:px-8 sm:pb-6 xl:pb-8" action="#" method="POST" id="commentForm" data-postid="{{ post['_id'] }}">
                 {{ form.csrf_token(id = "unique_id") }}
                 <h3 class="text-2xl mb-4 font-medium text-gray-900 dark:text-white pl-2">Add a comment</h3>
                 <div>
