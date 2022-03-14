@@ -28,3 +28,7 @@ class User(SimpleModel):
 
 class Post(SimpleModel):
     collection = mongo.db.posts
+
+
+class Comments(SimpleModel):
+    collection = mongo.db.comments

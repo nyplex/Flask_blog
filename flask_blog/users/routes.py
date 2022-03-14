@@ -5,7 +5,7 @@ from flask_blog.models import User
 from datetime import datetime
 from flask_blog.users.utils import create_username, validate_settings
 from flask_blog.posts.utils import update_posts_data, update_post_data
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from bson import ObjectId
 
 users = Blueprint("users", __name__)
@@ -70,6 +70,7 @@ def signup():
 
 
 @users.route("/logout")
+@login_required
 def logout():
     if current_user.is_authenticated:
         logout_user()
@@ -78,18 +79,31 @@ def logout():
 
 
 @users.route("/profile/<user_id>", methods=["GET", "POST"])
-def profile(user_id):
+@users.route("/profile/<user_id>/categories/<category_id>", methods=["GET", "POST"])
+@login_required
+def profile(user_id, **category_id):
 
+    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    postsCount = len(list(mongo.db.posts.find({"author": ObjectId(user_id)})))
+    
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
 
-    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
-    postsCount = len(list(mongo.db.posts.find(
-        {"author": ObjectId(user_id)})))
-    posts = mongo.db.posts.find({"author": ObjectId(user_id)}).sort("posted_date", -1)
-    updated_post = update_posts_data(posts)
+    if category_id:
+        category = mongo.db.categories.find_one({"_id": ObjectId(category_id['category_id'])})
+        posts = mongo.db.posts.find({"author": ObjectId(user_id), "category": ObjectId(category_id['category_id'])}).sort("posted_date", -1)
+        
+        data_category = category["category_name"]
+        liveSearchCategory = category["_id"]
+        updated_post = update_posts_data(posts)
+    else:
+        data_category = "multi"
+        liveSearchCategory = "liveSearchCategory"
+        posts = mongo.db.posts.find({"author": ObjectId(user_id)}).sort("posted_date", -1).limit(5)
+        updated_post = update_posts_data(posts)
+    
 
     return render_template("profile.html", title="Profile", 
                            settingsForm=settingsForm, user=user, 
-                           postsCount=postsCount, posts=updated_post)
+                           postsCount=postsCount, posts=updated_post, liveSearchUser=user_id, liveSearchCategory=liveSearchCategory, profile=True, data_category=data_category)

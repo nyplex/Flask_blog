@@ -5,6 +5,7 @@ import "./forms/settings"
 import "./forms/newPost"
 import "./ajax/load"
 import "./ajax/live_search"
+import "./ajax/feel_post"
 import "./ckEditor"
 
 //Close the flash message when user click on the cls btn

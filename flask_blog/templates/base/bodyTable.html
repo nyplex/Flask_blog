@@ -23,9 +23,16 @@
             <!-- Category Col -->
             <td class="hidden lg:table-cell py-4 px-2 text-sm font-medium text-gray-500 dark:text-white text-center">
                 <!-- Topic Category -->
+                {% if profile %}
+                <a href="{{ url_for('users.profile', user_id=post['author']._id, category_id=post['category']._id) }}">
+                    <span class="category-label-{{ post['category'].category_color }}">{{ post['category'].category_name|capitalize}}</span>
+                </a>
+                {% else %}
                 <a href="{{ url_for('main.home', category_id=post['category']._id) }}">
                     <span class="category-label-{{ post['category'].category_color }}">{{ post['category'].category_name|capitalize}}</span>
                 </a>
+                {% endif %}
+                
             </td>
             <!-- Like Col -->
             <td class="hidden lg:table-cell py-4 px-2 text-sm font-medium text-gray-900 dark:text-white text-center">

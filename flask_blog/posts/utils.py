@@ -142,6 +142,24 @@ def update_posts_data(posts):
     return updated_posts
 
 
+def update_comments_data(comments):
+    updated_comments = []
+
+    for comment in comments:
+        # get author and category of each post from DB using their ID
+        comment["author"] = mongo.db.users.find_one(ObjectId(comment["author"]))
+        comment["posted_date"] = format_post_date(comment["posted_date"])
+
+        updated_comments.append(comment)
+    
+    for updated_comment in updated_comments:
+        removeKey = ["password", "email", "signup_date"]
+        for key in removeKey:
+            del updated_comment["author"][key]
+                
+    return updated_comments
+
+
 def update_post_data(post):
     postArray = []
     post["author"] = mongo.db.users.find_one(ObjectId(post["author"]))

@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
+
+
     
-<div class="max-w-7xl mx-auto mt-4 mobile:mb-12 mb-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-4">
+<div class="max-w-7xl mx-auto mt-4 mobile:mb-6 mb-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md p-4">
     <div>
         <div class="flex flex-row justify-end items-center mobile:hidden">
             <i class="fa-solid fa-clock text-lg dark:text-gray-600 text-gray-400 mr-2"></i>
@@ -38,39 +40,48 @@
         </div>
         <div class="flex flex-col mobile:flex-row justify-between mt-8 items-center gap-8">
             <!-- Like, Unlike, Love btns -->
-            <div class="flex flex-row gap-8">
+            <div class="flex flex-row gap-4 items-center">
+
                 <!-- Like Btn status -->
                 {% if current_user["_id"] in post["liked_by"] %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='like') }}" class="fa-solid fa-thumbs-up text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="like" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-up likeBtnActive"></i><span id="likeCount" class="ml-1 text-base dark:text-gray-400">{{ post['like'] }}</span>
+                    </div>
                 {% else %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='like') }}" class="fa-solid fa-thumbs-up text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="like" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-up likeBtn"></i><span id="likeCount" class="ml-1 text-base dark:text-gray-400">{{ post['like'] }}</span>
+                    </div>
                 {% endif %}
+
                 <!-- Dislike Btn status -->
                 {% if current_user["_id"] in post["disliked_by"] %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='dislike') }}" class="fa-solid fa-thumbs-down text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="dislike" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-down likeBtnActive"></i><span id="dislikeCount" class="ml-1 text-base dark:text-gray-400">{{ post['dislike'] }}</span>
+                    </div>
                 {% else %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='dislike') }}" class="fa-solid fa-thumbs-down text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="dislike" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-down likeBtn"></i><span id="dislikeCount" class="ml-1 text-base dark:text-gray-400">{{ post['dislike'] }}</span>
+                    </div>
                 {% endif %}
+
                 <!-- Love Btn status -->
                 {% if current_user["_id"] in post["loved_by"] %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='love') }}" class="fa-solid fa-heart text-2xl dark:text-red-600 text-red-600 hover:cursor-pointer">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="love" data-postid="{{ post['_id'] }}" class="fa-solid fa-heart loveBtnActive">
+                        </i><span id="loveCount" class="ml-1 text-base dark:text-gray-400"></i><span class="ml-1 text-base dark:text-gray-400">{{ post['love'] }}</span>
+                    </div>
                 {% else %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='love') }}" class="fa-solid fa-heart text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-red-600 hover:text-red-600">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
-                    </a>
-                {% endif %}   
-            </div>
+                    <div>
+                        <i data-postfeelings="love" data-postid="{{ post['_id'] }}" class="fa-solid fa-heart loveBtn"></i><span id="loveCount" class="ml-1 text-base dark:text-gray-400">{{ post['love'] }}</span>
+                    </div>
+                {% endif %} 
 
+                <!-- New comment toggle -->
+                <button class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="authentication-modal">
+                    Comment
+                </button>
+            </div>
+            
             <!-- If post if from current_user show EDIT/DELETE btn -->
             {% if current_user._id == post['author']._id %}
                 <div class="flex flex-row justify-between gap-2">
@@ -83,5 +94,71 @@
         </div>
     </div>
 </div>
+
+<!-- COMMENTS SECTION -->
+<div class="max-w-7xl mx-auto mobile:mb-12 mb-4 rounded-lg">
+    <div>
+        <h2 class="dark:text-gray-100 text-gray-800 font-medium text-2xl mb-4 pl-2">{{ comments|length }} comment{% if comments|length > 1 %}s {% endif %}</h2>
+    </div>
+    {% for comment in comments %}
+        <div class="max-w-full dark:bg-gray-800 bg-gray-100 w-full rounded-lg p-4 shadow-lg mb-4">
+            <div class="flex flex-row justify-between">
+                <div class="flex flex-row justify-left items-center">
+                    <!-- Author Avatar -->
+                    <img class="rounded-full mr-4 w-10 h-10" src="{{ url_for('static', filename='media/profile_pics/' + comment['author'].image) }}" alt="">
+                    <div class="flex flex-col w-full space-y-2">
+                        <!-- Topic Title -->
+                        <a href="" class="navbar-unactive-link text-lg font-medium">{{ comment['author']['username'] }}</a>
+                    </div>
+                </div>
+                <div class="mobile:flex flex-row justify-between items-center hidden">
+                    <i class="fa-solid fa-clock text-lg dark:text-gray-600 text-gray-400 mr-2"></i>
+                    <span class="text-gray-600">{{ comment['posted_date'] }}</span>
+                </div>
+            </div>
+            <div class="mt-2">
+                <p class="font-medium text-lg dark:text-gray-100 text-gray-800">{{ comment['body'] }}</p>
+            </div>
+            {% if comment['author']['_id'] == current_user._id or post['author']['_id'] == current_user._id %}
+            <div class="mt-2 flex flex-row justify-end">
+                <a href="{{ url_for('posts.delete_comment', comment_id=comment['_id'], post_id=post['_id']) }}"><button class="danger-btn py-1.5 px-2.5">DELETE</button></a>
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+<!-- New comment modal -->
+<div id="authentication-modal" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center h-modal md:h-full md:inset-0">
+    <div class="relative mobile:px-4 w-full mobile:max-w-md h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white mobile:rounded-lg shadow dark:bg-gray-700">
+            <div class="flex justify-end p-2">
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="authentication-modal">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+                </button>
+            </div>
+            <form class="px-6 pb-4 lg:px-8 sm:pb-6 xl:pb-8" action="#" method="POST">
+                {{ form.csrf_token(id = "unique_id") }}
+                <h3 class="text-2xl mb-4 font-medium text-gray-900 dark:text-white pl-2">Add a comment</h3>
+                <div>
+                    {% if form.commentBody.errors %}
+                        {{ form.commentBody(class="form-invalid-input", rows="6") }}
+                        {% for error in form.commentBody.errors %}
+                            <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                        {% endfor %}
+                    {% else %}
+                        {{ form.commentBody(class="form-input ", rows="6") }}
+                    {% endif %}
+                    <!-- Submit & Cancel form -->
+                    <div class="mt-4 flex flex-row mobile:justify-end justify-center">
+                        {{ form.newCommentSubmit(class="primary-btn px-3 py-2.5") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 
+
 
 {%  endblock content %}
