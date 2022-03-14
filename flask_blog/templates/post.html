@@ -40,36 +40,40 @@
         </div>
         <div class="flex flex-col mobile:flex-row justify-between mt-8 items-center gap-8">
             <!-- Like, Unlike, Love btns -->
-            <div class="flex flex-row gap-8 items-center">
+            <div class="flex flex-row gap-4 items-center">
+
                 <!-- Like Btn status -->
                 {% if current_user["_id"] in post["liked_by"] %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='like') }}" class="fa-solid fa-thumbs-up text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="like" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-up likeBtnActive"></i><span id="likeCount" class="ml-1 text-base dark:text-gray-400">{{ post['like'] }}</span>
+                    </div>
                 {% else %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='like') }}" class="fa-solid fa-thumbs-up text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['like'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="like" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-up likeBtn"></i><span id="likeCount" class="ml-1 text-base dark:text-gray-400">{{ post['like'] }}</span>
+                    </div>
                 {% endif %}
+
                 <!-- Dislike Btn status -->
                 {% if current_user["_id"] in post["disliked_by"] %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='dislike') }}" class="fa-solid fa-thumbs-down text-2xl dark:text-blue-700 text-blue-700 hover:cursor-pointer">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="dislike" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-down likeBtnActive"></i><span id="dislikeCount" class="ml-1 text-base dark:text-gray-400">{{ post['dislike'] }}</span>
+                    </div>
                 {% else %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='dislike') }}" class="fa-solid fa-thumbs-down text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-blue-700 hover:text-blue-700">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['dislike'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="dislike" data-postid="{{ post['_id'] }}" class="fa-solid fa-thumbs-down likeBtn"></i><span id="dislikeCount" class="ml-1 text-base dark:text-gray-400">{{ post['dislike'] }}</span>
+                    </div>
                 {% endif %}
+
                 <!-- Love Btn status -->
                 {% if current_user["_id"] in post["loved_by"] %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='love') }}" class="fa-solid fa-heart text-2xl dark:text-red-600 text-red-600 hover:cursor-pointer">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="love" data-postid="{{ post['_id'] }}" class="fa-solid fa-heart loveBtnActive">
+                        </i><span id="loveCount" class="ml-1 text-base dark:text-gray-400"></i><span class="ml-1 text-base dark:text-gray-400">{{ post['love'] }}</span>
+                    </div>
                 {% else %}
-                    <a href="{{ url_for('posts.like_post', post_id=post['_id'], feeling='love') }}" class="fa-solid fa-heart text-2xl dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-red-600 hover:text-red-600">
-                        </i><span class="ml-2 text-xl dark:text-gray-400">{{ post['love'] }}</span>
-                    </a>
+                    <div>
+                        <i data-postfeelings="love" data-postid="{{ post['_id'] }}" class="fa-solid fa-heart loveBtn"></i><span id="loveCount" class="ml-1 text-base dark:text-gray-400">{{ post['love'] }}</span>
+                    </div>
                 {% endif %} 
 
                 <!-- New comment toggle -->

@@ -104,18 +104,31 @@ def live_search():
     if request.method == "POST":
         data = request.values.get('input')
         liveSearchCategory = request.values.get('liveSearchCategory')
-        
-        
-        if liveSearchCategory == "liveSearchCategory":
-            if data == "":
-                posts = mongo.db.posts.find()
+        liveSearchUser = request.values.get('liveSearchUser')
+        print(liveSearchUser)
+
+        if liveSearchUser == "all":
+            if liveSearchCategory == "liveSearchCategory":
+                if data == "":
+                    posts = mongo.db.posts.find().sort("posted_date", -1).limit(5)
+                else:
+                    posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}}).sort("posted_date", -1).limit(5)
             else:
-                posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}})
+                if data == "":
+                    posts = mongo.db.posts.find({"category": ObjectId(liveSearchCategory)}).sort("posted_date", -1).limit(5)
+                else:
+                    posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}, "category": ObjectId(liveSearchCategory)}).sort("posted_date", -1).limit(5)
         else:
-            if data == "":
-                posts = mongo.db.posts.find({"category": ObjectId(liveSearchCategory)})
+            if liveSearchCategory == "liveSearchCategory":
+                if data == "":
+                    posts = mongo.db.posts.find({"author": ObjectId(liveSearchUser)}).sort("posted_date", -1).limit(5)
+                else:
+                    posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}, 'author': ObjectId(liveSearchUser)}).sort("posted_date", -1).limit(5)
             else:
-                posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}, "category": ObjectId(liveSearchCategory)})
+                if data == "":
+                    posts = mongo.db.posts.find({"category": ObjectId(liveSearchCategory), "author": ObjectId(liveSearchUser)}).sort("posted_date", -1).limit(5)
+                else:
+                    posts = mongo.db.posts.find({"title": {"$regex": data, "$options" :'i'}, "category": ObjectId(liveSearchCategory), "author": ObjectId(liveSearchUser)}).sort("posted_date", -1).limit(5)
 
         
         for data in posts:

@@ -144,8 +144,15 @@ def like_post(post_id, feeling):
         dislike_post(post_id, "dislike")
     elif feeling == "love":
         love_post(post_id, "love")
-
-    return redirect(url_for("posts.single_post", post_id=post_id))
+    
+    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    update_post_data(post)
+    data = {
+        "like": post['like'],
+        "dislike": post['dislike'],
+        "love": post['love']
+    }
+    return make_response(jsonify(data))
 
 
 @posts.route("/delete-comment/<comment_id>/<post_id>", methods=["GET", "POST"])

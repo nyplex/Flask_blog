@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask
 if os.path.exists("env.py"):
     import env
 from flask_pymongo import PyMongo
