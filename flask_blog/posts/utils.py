@@ -144,12 +144,18 @@ def update_posts_data(posts):
 
 def update_comments_data(comments):
     updated_comments = []
-
+    
     for comment in comments:
         # get author and category of each post from DB using their ID
         comment["author"] = mongo.db.users.find_one(ObjectId(comment["author"]))
         comment["posted_date"] = format_post_date(comment["posted_date"])
-
+        post = mongo.db.posts.find_one({"_id": ObjectId(comment['post'])})
+        
+        if comment['author']['_id'] == current_user._id or post['author'] == current_user._id:
+            comment["delete"] = True
+        else:
+            comment["delete"] = False
+            
         updated_comments.append(comment)
     
     for updated_comment in updated_comments:

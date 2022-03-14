@@ -5,7 +5,6 @@ import { populateHomePage } from "./home"
 let counter = 0
 
 $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
-    console.log($(location).attr('href'));
     counter += 5
     let dataAttr = $(e.target).data("loading")
     let category
