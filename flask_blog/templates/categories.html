@@ -1,10 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-    
+
+
 <div class="max-w-7xl mx-auto mt-4 mobile:mb-12 mb-4 p-4">
+    <!-- Header and search input -->
     <div class="flex flex-row justify-between items-center">
         <h1 class="text-2xl text-gray-800 dark:text-white font-normal py-6">Categories</h1>
         <div>
+            <!--  Search categories input-->
             <div class="relative mobile:mr-4">
                 <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                     <i class="fa-solid fa-magnifying-glass text-gray-500 dark:text-gray-400"></i>
@@ -14,17 +17,25 @@
             <span class="mobile:mx-auto"></span>
         </div>
     </div>
+
     <hr class="border-gray-400 dark:border-gray-600 mb-6">
+
     <div class="flex flex-row justify-center flex-wrap gap-8" id="categoriesContainer">
         {% for category in categories %}
         <a href="{{ url_for('main.home', category_id=category._id) }}" class="p-6 w-[30%] min-w-[290px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700">
+            
+            <!-- Category name and count -->
             <div class="flex flex-row justify-between">
                 <span class="category-label-{{ category.category_color }}">{{ category.category_name|capitalize}}</span>
                 <span class="text-gray-500 font-normal text-lg">Threads - {{ category.count }}</span>
             </div>
+
+            <!-- category description -->
             <div>
                 <p class="my-3 font-normal text-gray-700 dark:text-gray-400">{{ category.description }}</p>
             </div>
+
+            <!-- Category's popular tags -->
             <div>
                 <span class="dark:text-gray-300 text-gray-500 font-medium text-md mb-2">Popular Tags</span>
                 <div>
@@ -38,6 +49,7 @@
     </div>
 </div>
 
+<!-- Load more btn -->
 <div class="mx-auto mobile:mb-12 mb-4 w-auto text-center" id="loadingBtnContainer">
     <button data-loading="categories" id="loadingBtnCategories" class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center">
         <div data-loading="categories" class="hidden" id="loadingIcon">

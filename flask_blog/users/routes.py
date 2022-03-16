@@ -13,7 +13,9 @@ users = Blueprint("users", __name__)
 
 @users.route("/login", methods=["GET", "POST"])
 def login():
+
     form = LoginForm()
+
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
 
@@ -83,27 +85,36 @@ def logout():
 @login_required
 def profile(user_id, **category_id):
 
+    # Get the user from DB
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
     postsCount = len(list(mongo.db.posts.find({"author": ObjectId(user_id)})))
-    
+
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
 
+    # Load post filtered by category if cat. param. exists
     if category_id:
-        category = mongo.db.categories.find_one({"_id": ObjectId(category_id['category_id'])})
-        posts = mongo.db.posts.find({"author": ObjectId(user_id), "category": ObjectId(category_id['category_id'])}).sort("posted_date", -1)
-        
+        category = mongo.db.categories.find_one(
+            {"_id": ObjectId(category_id['category_id'])})
+        posts = mongo.db.posts.find({"author": ObjectId(user_id), "category": ObjectId(
+            category_id['category_id'])}).sort("posted_date", -1)
+
         data_category = category["category_name"]
         liveSearchCategory = category["_id"]
         updated_post = update_posts_data(posts)
+
+    # Load all the user's posts
     else:
         data_category = "multi"
         liveSearchCategory = "liveSearchCategory"
-        posts = mongo.db.posts.find({"author": ObjectId(user_id)}).sort("posted_date", -1).limit(5)
+        posts = mongo.db.posts.find({"author": ObjectId(user_id)}).sort(
+            "posted_date", -1).limit(5)
         updated_post = update_posts_data(posts)
-    
 
-    return render_template("profile.html", title="Profile", 
-                           settingsForm=settingsForm, user=user, 
-                           postsCount=postsCount, posts=updated_post, liveSearchUser=user_id, liveSearchCategory=liveSearchCategory, profile=True, data_category=data_category)
+    return render_template("profile.html", title="Profile",
+                           settingsForm=settingsForm, user=user,
+                           postsCount=postsCount, posts=updated_post, 
+                           liveSearchUser=user_id, 
+                           liveSearchCategory=liveSearchCategory, 
+                           profile=True, data_category=data_category)

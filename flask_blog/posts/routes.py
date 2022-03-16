@@ -24,17 +24,26 @@ def new_post():
     newTopicForm = NewTopicForm()
 
     if request.method == "POST":
+        
+        # validata the new post form 
         if "newPostSubmit" in request.form and newTopicForm.validate_on_submit():
+            
+            # save the the new post in DB
             saveNewTopic(newTopicForm)
             getPost = mongo.db.posts.find(
                 {'author': ObjectId(current_user._id)}).sort("_id", -1).limit(1)
+            
+            #get the ID of the new post in order to redirect the url to this post
             postID = getPost[0]['_id']
+            
             flash("New Topic successfully posted!", "flash-success")
-
             return redirect(url_for("posts.single_post", post_id=postID))
 
+        #validate the settings form
         elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
+            
+        #if one of the forms is not valid throw an error flash message
         else:
             flash("There is an error in the form", "flash-danger")
 
@@ -46,14 +55,19 @@ def new_post():
 @posts.route("/posts/<post_id>", methods=["GET", "POST"])
 @login_required
 def single_post(post_id):
+    
     commentForm = NewCommentForm()
     settingsForm = SettingsForm()
+    
     if request.method == "POST":
-
+        #validate the settings form
         if "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
 
+        #validate new comment form
         elif commentForm.validate_on_submit():
+            
+            #save new comment in DB
             newTopic = Comments({
                 "author": current_user["_id"],
                 "body": re.sub("\s\s+", " ", commentForm.commentBody.data),
@@ -61,9 +75,11 @@ def single_post(post_id):
                 "post": ObjectId(post_id)
             })
             mongo.db.comments.insert_one(newTopic)
+            
+            #get the new comment from DB in order to send it back to the client via Ajax
             lastComment = mongo.db.comments.find({"author": ObjectId(
                 current_user["_id"]), "body": re.sub("\s\s+", " ", commentForm.commentBody.data), "post": ObjectId(post_id)}).sort("posted_date", -1).limit(1)
-            json_docs = []
+            json_docs = [] #comment container
             result = {
                 "_id": ObjectId(lastComment[0]['_id']),
                 "author": current_user["_id"],
@@ -71,26 +87,30 @@ def single_post(post_id):
                 "posted_date": datetime.now(),
                 "post": ObjectId(post_id)
             }
+            #Comment Ajax Response
             dataArray = update_comments_data([result])
             json_doc = json.dumps(dataArray, default=json_util.default)
             json_docs.append(json_doc)
 
             return make_response(jsonify(json_docs))
         else:
+            #error Ajax response
             return make_response(jsonify(False))
             
-    # get post from DB using post_id
+    # get post from DB using post_id from the URL
     try:
         post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
         comments = mongo.db.comments.find({"post": ObjectId(post_id)})
     except:
         return error_404("error")
 
+    #Update and format post and comments 
     posted_date = post['posted_date']
     update_post_data(post)
     update_comments = update_comments_data(comments)
     post['posted_date'] = posted_date
     content = post['content']
+    
     return render_template("post.html", post=post,
                            settingsForm=settingsForm,
                            content=content, comments=update_comments,
@@ -100,28 +120,44 @@ def single_post(post_id):
 @posts.route("/edit-post/<post_id>", methods=["GET", "POST"])
 @login_required
 def edit_post(post_id):
-
-    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
-    update_post_data(post)
+    
     settingsForm = SettingsForm()
     editTopicForm = NewTopicForm()
+
+    #Get the post to edit from DB
+    post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    
+    #Update and format the post
+    update_post_data(post)
+    
     if request.method == "POST":
+        #Get the form content
         editTopicForm.topicBody.data = editTopicForm.topicBody.data
         editTopicForm.topicTitle.data = editTopicForm.topicTitle.data
         editTopicForm.categoryField.data = editTopicForm.categoryField.data
 
+        #Validate the edit form content
         if "newPostSubmit" in request.form and editTopicForm.validate_on_submit():
             cat = mongo.db.categories.find_one(post['category'])
+            
+            #Update the 'count' on category in DB
             count = cat["count"]
             mongo.db.categories.update_one(
                 post['category'], {"$set": {"count": count - 1}})
+            
+            #Edit the post and save it
             edit_db_post(editTopicForm, post_id)
             flash("Edtit sucess", "flash-success")
 
+        #validate the settings form
         elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
+            
+        #if one of the forms is not valid throw an error flash message
         else:
             flash("There is an error in the form", "flash-danger")
+    
+    #Populate the editPost form
     else:
         editTopicForm.topicBody.data = post['content']
         editTopicForm.topicTitle.data = post['title']
@@ -137,15 +173,25 @@ def edit_post(post_id):
 @posts.route("/delete-post/<post_id>", methods=["GET", "POST"])
 @login_required
 def delete_post(post_id):
+    
+    #Get the post to delete
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    
+    #Get the category and update the count
     cat = mongo.db.categories.find_one(ObjectId(post["category"]))
     count = cat["count"]
     mongo.db.categories.update_one(cat, {"$set": {"count": count - 1}})
+    
+    #Format and update post
     update_post_data(post)
+    
+    #Check if user is authorized to delete the post
     if post['author']['_id'] != current_user._id:
         return redirect(url_for("posts.single_post", post_id=post_id))
 
+    # delete post
     mongo.db.posts.delete_one({"_id": ObjectId(post_id)})
+    
     return redirect(url_for("main.home"))
 
 
@@ -153,6 +199,7 @@ def delete_post(post_id):
 @login_required
 def like_post(post_id, feeling):
 
+    #Update the feelings
     if feeling == "like":
         feel_post(post_id, "like")
     elif feeling == "dislike":
@@ -160,13 +207,19 @@ def like_post(post_id, feeling):
     elif feeling == "love":
         love_post(post_id, "love")
 
+    #Get the post from DB
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    
+    #Update and format post
     update_post_data(post)
+    
+    #Store the feeling's data of the post
     data = {
         "like": post['like'],
         "dislike": post['dislike'],
         "love": post['love']
     }
+
     return make_response(jsonify(data))
 
 
@@ -174,12 +227,16 @@ def like_post(post_id, feeling):
 @login_required
 def delete_comment(comment_id, post_id):
 
+    #Get post and comment from DB
     comment = mongo.db.comments.find_one({'_id': ObjectId(comment_id)})
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
 
+    #Check if user is authorized to delete the comment
     if comment['author'] == current_user._id or post['author'] == current_user._id:
         mongo.db.comments.delete_one({"_id": ObjectId(comment_id)})
         return make_response("deleted")
+    
+    #throw a flash message if user is not authorized to delete the comment and redirect to the post
     else:
         flash("You are not authorized to delete this comment!", "flash-danger")
         return redirect(url_for("posts.single_post", post_id=post_id))
@@ -188,17 +245,21 @@ def delete_comment(comment_id, post_id):
 @posts.route("/load-comments/<post_id>", methods=["GET", "POST"])
 @login_required
 def load_comments(post_id):
-    json_docs = []
+    
+    json_docs = [] #data container
 
+    #Get comments fron DB
     comments = mongo.db.comments.find(
         {"post": ObjectId(post_id)}).sort("posted_date", -1)
     dataLen = len(list(mongo.db.comments.find({"post": ObjectId(post_id)})))
 
+    #Update and format comments
     for comment in comments:
         dataArray = update_comments_data([comment])
         json_doc = json.dumps(dataArray, default=json_util.default)
         json_docs.append(json_doc)
 
+    #Store the data to return
     result = {
         "result": json_docs,
         "counts": dataLen
