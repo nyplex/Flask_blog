@@ -10,7 +10,7 @@ from bson import ObjectId, json_util
 import json
 from datetime import datetime
 import re
-from flask_blog.errors.handlers import error_404 
+from flask_blog.errors.handlers import error_404
 
 
 posts = Blueprint("posts", __name__)
@@ -26,7 +26,8 @@ def new_post():
     if request.method == "POST":
         if "newPostSubmit" in request.form and newTopicForm.validate_on_submit():
             saveNewTopic(newTopicForm)
-            getPost = mongo.db.posts.find({'author': ObjectId(current_user._id)}).sort("_id", -1).limit(1)
+            getPost = mongo.db.posts.find(
+                {'author': ObjectId(current_user._id)}).sort("_id", -1).limit(1)
             postID = getPost[0]['_id']
             flash("New Topic successfully posted!", "flash-success")
 
@@ -44,41 +45,55 @@ def new_post():
 
 @posts.route("/posts/<post_id>", methods=["GET", "POST"])
 @login_required
-def single_post(post_id):        
+def single_post(post_id):
     commentForm = NewCommentForm()
     settingsForm = SettingsForm()
     if request.method == "POST":
-        
+
         if "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
-        
+
         elif commentForm.validate_on_submit():
-            print("therrrre")
             newTopic = Comments({
-            "author": current_user["_id"],
-            "body": re.sub("\s\s+", " ", commentForm.commentBody.data),
-            "posted_date": datetime.now(),
-            "post": ObjectId(post_id)
+                "author": current_user["_id"],
+                "body": re.sub("\s\s+", " ", commentForm.commentBody.data),
+                "posted_date": datetime.now(),
+                "post": ObjectId(post_id)
             })
             mongo.db.comments.insert_one(newTopic)
-            flash("Comment posted!", "flash-success")
-            return "hello world"
+            lastComment = mongo.db.comments.find({"author": ObjectId(
+                current_user["_id"]), "body": re.sub("\s\s+", " ", commentForm.commentBody.data), "post": ObjectId(post_id)}).sort("posted_date", -1).limit(1)
+            json_docs = []
+            result = {
+                "_id": ObjectId(lastComment[0]['_id']),
+                "author": current_user["_id"],
+                "body": re.sub("\s\s+", " ", commentForm.commentBody.data),
+                "posted_date": datetime.now(),
+                "post": ObjectId(post_id)
+            }
+            dataArray = update_comments_data([result])
+            json_doc = json.dumps(dataArray, default=json_util.default)
+            json_docs.append(json_doc)
 
+            return make_response(jsonify(json_docs))
+        else:
+            return make_response(jsonify(False))
+            
     # get post from DB using post_id
     try:
         post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
         comments = mongo.db.comments.find({"post": ObjectId(post_id)})
     except:
         return error_404("error")
-    
+
     posted_date = post['posted_date']
     update_post_data(post)
     update_comments = update_comments_data(comments)
     post['posted_date'] = posted_date
     content = post['content']
     return render_template("post.html", post=post,
-                           settingsForm=settingsForm, 
-                           content=content, comments=update_comments, 
+                           settingsForm=settingsForm,
+                           content=content, comments=update_comments,
                            form=commentForm)
 
 
@@ -144,7 +159,7 @@ def like_post(post_id, feeling):
         dislike_post(post_id, "dislike")
     elif feeling == "love":
         love_post(post_id, "love")
-    
+
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
     update_post_data(post)
     data = {
@@ -161,10 +176,10 @@ def delete_comment(comment_id, post_id):
 
     comment = mongo.db.comments.find_one({'_id': ObjectId(comment_id)})
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+
     if comment['author'] == current_user._id or post['author'] == current_user._id:
         mongo.db.comments.delete_one({"_id": ObjectId(comment_id)})
-        flash("Comment deleted!", "flash-success")
-        return redirect(url_for("posts.single_post", post_id=post_id))
+        return make_response("deleted")
     else:
         flash("You are not authorized to delete this comment!", "flash-danger")
         return redirect(url_for("posts.single_post", post_id=post_id))
@@ -174,19 +189,19 @@ def delete_comment(comment_id, post_id):
 @login_required
 def load_comments(post_id):
     json_docs = []
-    
-    comments = mongo.db.comments.find({"post": ObjectId(post_id)})
+
+    comments = mongo.db.comments.find(
+        {"post": ObjectId(post_id)}).sort("posted_date", -1)
     dataLen = len(list(mongo.db.comments.find({"post": ObjectId(post_id)})))
-    
+
     for comment in comments:
         dataArray = update_comments_data([comment])
         json_doc = json.dumps(dataArray, default=json_util.default)
         json_docs.append(json_doc)
-    
 
     result = {
         "result": json_docs,
         "counts": dataLen
     }
-    
+
     return make_response(jsonify(result))

@@ -105,7 +105,6 @@ def live_search():
         data = request.values.get('input')
         liveSearchCategory = request.values.get('liveSearchCategory')
         liveSearchUser = request.values.get('liveSearchUser')
-        print(liveSearchUser)
 
         if liveSearchUser == "all":
             if liveSearchCategory == "liveSearchCategory":

@@ -188,3 +188,7 @@
 .loveBtn {
     @apply text-lg dark:text-gray-400 text-gray-500 hover:cursor-pointer dark:hover:text-red-600 hover:text-red-600
 }
+
+.comment-body {
+    @apply font-medium text-lg dark:text-gray-100 text-gray-800
+}
