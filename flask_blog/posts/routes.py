@@ -46,10 +46,15 @@ def new_post():
         #if one of the forms is not valid throw an error flash message
         else:
             flash("There is an error in the form", "flash-danger")
+    
+    page_data = {
+        "title": "Create New Topic",
+        "submit": "Create Topic"
+    }
 
     return render_template("new_post.html",
                            page_title="New Post", active_link="new_post",
-                           settingsForm=settingsForm, form=newTopicForm)
+                           settingsForm=settingsForm, form=newTopicForm, page_data=page_data)
 
 
 @posts.route("/posts/<post_id>", methods=["GET", "POST"])
@@ -165,9 +170,14 @@ def edit_post(post_id):
         tagsList = post['tags']
         tags = ','.join(tagsList)
         editTopicForm.newTopicTags.data = tags
+    
+    page_data = {
+        "title": "Edit Topic",
+        "submit": "Edit Post"
+    }
 
-    return render_template("edit_post.html", settingsForm=settingsForm,
-                           form=editTopicForm, post_id=post_id)
+    return render_template("new_post.html", settingsForm=settingsForm,
+                           form=editTopicForm, post_id=post_id, page_data=page_data)
 
 
 @posts.route("/delete-post/<post_id>", methods=["GET", "POST"])
@@ -185,12 +195,13 @@ def delete_post(post_id):
     #Format and update post
     update_post_data(post)
     
-    #Check if user is authorized to delete the post
+    # if user is NOT authorized to delete the post
     if post['author']['_id'] != current_user._id:
         return redirect(url_for("posts.single_post", post_id=post_id))
 
     # delete post
     mongo.db.posts.delete_one({"_id": ObjectId(post_id)})
+    flash("Post succesfully deleted", "flash-success")
     
     return redirect(url_for("main.home"))
 

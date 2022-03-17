@@ -8,8 +8,12 @@ $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
     counter += 5
     let dataAttr = $(e.target).data("loading")
     let category
+    let userID
     if(dataAttr == "posts") {
         category = $(e.target).data("category")
+    }else if(dataAttr == "user") {
+        category = $(e.target).data("category")
+        userID = $(e.target).data("userid")
     }else{
         category = null
     }
@@ -23,7 +27,8 @@ $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
         data: {
             'c': counter, // pass the counter as url paramters
             'coll': dataAttr,
-            'category': category
+            'category': category,
+            "userid": userID
         },
         success: function (response) {
             // if counter is >= to the total of posts in the DB , no more post to load => update the loading btn

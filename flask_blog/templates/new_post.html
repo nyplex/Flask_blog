@@ -3,7 +3,9 @@
     
 
 <div class="px-2">
-    <h1 class="text-2xl text-gray-800 dark:text-white font-normal py-6">Create New Topic</h1>
+    <h1 class="text-2xl text-gray-800 dark:text-white font-normal py-6">
+        {{page_data.title}}
+    </h1>
     <hr class="border-gray-400 dark:border-gray-600 mb-6">
     <!-- New Post Form -->
     <form action="" enctype="multipart/form-data" method="POST" id="newTopicForm" class="space-y-6">
@@ -100,7 +102,7 @@
         <!-- Submit & Cancel form -->
         <div class="mt-16 flex flex-row mobile:justify-end justify-center">
             <a class="danger-btn px-4 py-2.5 mobile:mr-4 ml-4 mobile:ml-0 mb-12 order-2 mobile:-order-1" href="{{ url_for('main.home') }}">Cancel</a>
-            {{ form.newPostSubmit(class="primary-btn px-3 py-2.5 mb-12") }}
+            {{ form.newPostSubmit(class="primary-btn px-3 py-2.5 mb-12", value=page_data.submit) }}
         </div>
         
     </form>

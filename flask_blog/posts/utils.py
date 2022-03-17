@@ -199,6 +199,7 @@ def update_post_data(post):
     return postArray
 
 
+
 def feel_post(post_id, feeling):
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
     dislike = post['dislike']
