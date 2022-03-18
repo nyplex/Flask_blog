@@ -98,18 +98,21 @@ def profile(user_id, **category_id):
         category = mongo.db.categories.find_one(
             {"_id": ObjectId(category_id['category_id'])})
         posts = mongo.db.posts.find({"author": ObjectId(user_id), "category": ObjectId(
-            category_id['category_id'])}).sort("posted_date", -1)
+            category_id['category_id'])}).sort("posted_date", -1).limit(5)
 
         data_category = category["category_name"]
+        countResult = f"" + str(len(list(mongo.db.posts.find({"category": ObjectId(category_id['category_id']), "author": ObjectId(user_id)}))))
         liveSearchCategory = category["_id"]
         updated_post = update_posts_data(posts)
 
     # Load all the user's posts
     else:
+        category = None
         data_category = "multi"
         liveSearchCategory = "liveSearchCategory"
         posts = mongo.db.posts.find({"author": ObjectId(user_id)}).sort(
             "posted_date", -1).limit(5)
+        countResult = f"" + str(len(list(mongo.db.posts.find({"author": ObjectId(user_id)}))))
         updated_post = update_posts_data(posts)
 
     return render_template("profile.html", title="Profile",
@@ -117,4 +120,4 @@ def profile(user_id, **category_id):
                            postsCount=postsCount, posts=updated_post, 
                            liveSearchUser=user_id, 
                            liveSearchCategory=liveSearchCategory, 
-                           profile=True, data_category=data_category)
+                           profile=True, data_category=data_category, countResult=countResult, category=category)

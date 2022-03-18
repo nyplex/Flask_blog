@@ -1,5 +1,5 @@
 import { populateCategories } from "./categories"
-import { populateHomePage } from "./home"
+import { populateHomePage, populateUserPosts } from "./home"
 
 
 let counter = 0
@@ -11,9 +11,10 @@ $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
     let userID
     if(dataAttr == "posts") {
         category = $(e.target).data("category")
-    }else if(dataAttr == "user") {
+    }else if(dataAttr == "postUser") {
         category = $(e.target).data("category")
         userID = $(e.target).data("userid")
+        console.log(userID);
     }else{
         category = null
     }
@@ -38,7 +39,9 @@ $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
                 // populate the home page with new loaded posts
                 if(dataAttr == "posts") {
                     populateHomePage(response.result)
-                }else{
+                }else if(dataAttr == "postUser"){
+                    populateUserPosts(response.result)
+                } else{
                     populateCategories(response.result)
                 }
             }
