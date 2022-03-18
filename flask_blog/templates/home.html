@@ -10,27 +10,36 @@
                     <thead class="bg-transparent" id="testAjax">
                         <!-- Search Row -->
                         <tr>
-                            <th scope="col" class=" pb-4 text-sm font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400" colspan="4">
+                            <th scope="col" class="text-sm font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400" colspan="4">
                                 <div class="flex flex-row mobile:justify-left justify-between ml-2 mobile:ml-0 items-center">
                                     <!-- Search Input -->
-                                    <div class="relative mobile:mr-4">
-                                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                                            <i class="fa-solid fa-magnifying-glass text-gray-500 dark:text-gray-400"></i>
+                                    <div class="flex flex-row ">
+                                        <div class="relative mobile:mr-4">
+                                            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                                                <i class="fa-solid fa-magnifying-glass text-gray-500 dark:text-gray-400"></i>
+                                            </div>
+                                            <input data-livesearchcategory="{{ liveSearchCategory }}" data-livesearchuser="all" type="text" id="posts_search" name="posts_search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
                                         </div>
-                                        <input data-livesearchcategory="{{ liveSearchCategory }}" data-livesearchuser="all" type="text" id="posts_search" name="posts_search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
+                                        <span class="mobile:mx-auto"></span>
+                                        <div class="mt-2">
+                                            {% if data_category != "multi" %}
+                                            <span class="category-label-{{ category.category_color }} mt-4">{{ data_category|capitalize}}</span>
+                                            <a href="{{ url_for('main.home') }}"><span class="category-label-gray mt-4">ALL</span></a>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                    <span class="mobile:mx-auto"></span>
                                     <div>
                                         <a href="{{ url_for('posts.new_post') }}" class="hidden mobile:block primary-btn py-2 px-4">Add New Topic</a>
 
                                         <a href="{{ url_for('posts.new_post') }}" class="mobile:hidden text-green-500 hover:text-white hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm text-center dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800"><i class="fa-solid fa-pen-to-square text-2xl self-end mr-2"></i></a>
                                     </div>
                                 </div>
+                                <span class="text-xs normal-case mt-4" id="countResult">{{ countResult }} Results</span>
                             </th>
                         </tr><!-- Search Row End -->
                         
                         <!-- Table Row Header -->
-                        <tr class="bg-gray-200 dark:bg-gray-700 mt-4">
+                        <tr class="bg-gray-200 dark:bg-gray-700">
                             <!-- Topic Row -->
                             <th scope="col" class="py-2 px-2 text-sm font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
                                 <a href="{{ url_for('main.home', sort='title') }}" class="hover:text-blue-700">
@@ -57,7 +66,6 @@
                             </th>
                         </tr><!-- End Table Row Header -->
                     </thead><!-- End Table Header -->
-
                    {% include 'base/bodyTable.html'%}
                 </table>
             </div>
@@ -65,6 +73,7 @@
     </div>
 </div>
 
+<!-- Load more btn -->
 <div class="mx-auto mobile:mb-12 mb-4 w-auto text-center" id="loadingBtnContainer">
     <button data-loading="posts" data-category="{{ data_category }}" id="loadingBtn" class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center">
         <div data-loading="posts" data-category="{{ data_category }}" class="hidden" id="loadingIcon">

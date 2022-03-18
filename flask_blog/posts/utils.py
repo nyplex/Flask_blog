@@ -12,6 +12,8 @@ import re
 
 
 def format_post_date(postDate):
+    # Get the time diff. between now and when the topic was posted
+    
     then = postDate
     now = datetime.now()
     duration = now - then
@@ -85,21 +87,30 @@ def saveNewTopic(form):
         "loved_by": [],
         "comments": []
     })
+    #Get category and update count
     cat = mongo.db.categories.find_one(category_id)
     count = cat["count"]
     mongo.db.categories.update_one(category_id, {"$set":{"count": count + 1}})
+    
+    #Save the new post
     mongo.db.posts.insert_one(newTopic)
 
 
 def edit_db_post(form, post_id):
+    
+    #Get the post to edit
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
+    
+    #get the cateogry of the post
     category_id = mongo.db.categories.find_one(
         {"category_name": form.categoryField.data})
     
+    #Get the tags
     tags = form.newTopicTags.data
     tagsList = tags.split(",")
     if tagsList == [""]:
         tagsList = []
+        
     # if user input media
     if form.topicMedia.data:
         postMedia = form.topicMedia.data
@@ -111,6 +122,7 @@ def edit_db_post(form, post_id):
             filename = saveTopicVideo(form.topicMedia.data)
     else:
         filename = post['media']
+        
     # Create new Post object to save inDB
     mongo.db.posts.update_one(post, {"$set": {
         "title": re.sub("\s\s+", " ", form.topicTitle.data),
@@ -119,9 +131,14 @@ def edit_db_post(form, post_id):
         "tags": tagsList,
         "media": filename
     }})
+    
+    #Update category count
     cat = mongo.db.categories.find_one(category_id)
     count = cat["count"]
+    
+    #Update the post
     mongo.db.categories.update_one(category_id, {"$set":{"count": count + 1}})
+
 
 def update_posts_data(posts):
     updated_posts = []
@@ -180,6 +197,7 @@ def update_post_data(post):
         del postArray[0]["author"][key]
         
     return postArray
+
 
 
 def feel_post(post_id, feeling):
