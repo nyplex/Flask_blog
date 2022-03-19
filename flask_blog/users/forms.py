@@ -143,3 +143,8 @@ class SettingsForm(FlaskForm):
             if not result:
                 raise ValidationError(
                 'Password must have at least 1 capital letter, 1 number, 1 special character and must be 6-40 characters long. Can NOT contain any white space')
+    
+    def validate_profile_pic(self, profile_pic):
+        max_bytes = 2*1024*1024
+        if len(profile_pic.data.read()) > max_bytes:
+            raise ValidationError(f"File size must be less than 2MB")

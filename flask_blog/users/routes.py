@@ -92,6 +92,11 @@ def profile(user_id, **category_id):
     settingsForm = SettingsForm()
     if settingsForm.validate_on_submit():
         validate_settings(settingsForm)
+        if category_id:
+            return redirect(url_for("users.profile", user_id=user_id, category_id=category_id))
+        else:
+            return redirect(url_for("users.profile", user_id=user_id))
+        
 
     # Load post filtered by category if cat. param. exists
     if category_id:

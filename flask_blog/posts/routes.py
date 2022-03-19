@@ -42,6 +42,7 @@ def new_post():
         #validate the settings form
         elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
+            return redirect(url_for("posts.new_post"))
             
         #if one of the forms is not valid throw an error flash message
         else:
@@ -68,6 +69,7 @@ def single_post(post_id):
         #validate the settings form
         if "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
+            return redirect(url_for("posts.single_post", post_id=post_id))
 
         #validate new comment form
         elif commentForm.validate_on_submit():
@@ -157,6 +159,7 @@ def edit_post(post_id):
         #validate the settings form
         elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
             validate_settings(settingsForm)
+            return redirect(url_for("posts.edit_post", post_id=post_id))
             
         #if one of the forms is not valid throw an error flash message
         else:

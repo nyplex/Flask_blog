@@ -10,7 +10,7 @@
             </li>
         </ul>
         <!-- Settings Form -->
-        <form action="" method="POST" enctype="multipart/form-data" id="settings_form">
+        <form action="" method="POST" enctype="multipart/form-data" id="settings_form" autocomplete="off">
             {{ settingsForm.hidden_tag() }}
             <ul class="pt-4 mt-4 mx-auto space-y-4 border-t border-gray-200 dark:border-gray-700 w-[250px] max-w-[250px]">
                 <!-- Profile Picure Field -->
@@ -19,8 +19,8 @@
                         {{ settingsForm.profile_pic.label(class="form-invalid-label") }}
                         {{ settingsForm.profile_pic(class="block w-full text-sm text-red-900 bg-red-50 rounded-lg border border-red-300 cursor-pointer dark:text-red-400 focus:outline-none focus:border-transparent dark:bg-red-700 dark:border-red-600 dark:placeholder-red-400") }}
                         {% for error in settingsForm.profile_pic.errors %}
-                        <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
-                    {% endfor %}
+                            <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                        {% endfor %}
                     {% else %}
                         {{ settingsForm.profile_pic.label(class="form-label") }}
                         {{ settingsForm.profile_pic(class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
@@ -30,65 +30,65 @@
                 <li>
                     {% if settingsForm.username.errors %}
                         {{ settingsForm.username.label(class="form-invalid-label") }}
-                        {{ settingsForm.username(class="form-invalid-input", placeholder=current_user.username) }}
+                        {{ settingsForm.username(class="form-invalid-input", placeholder=current_user.username, autocomplete="off") }}
                         {% for error in settingsForm.username.errors %}
                             <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
                         {% endfor %}
                     {% else %}
                         {{ settingsForm.username.label(class="form-label") }}
-                        {{ settingsForm.username(class="form-input", placeholder=current_user.username) }}
+                        {{ settingsForm.username(class="form-input", placeholder=current_user.username, autocomplete="off") }}
                     {% endif %}
                 </li>
                 <!-- First Name Field -->
                 <li>
                     {% if settingsForm.fname.errors %}
                         {{ settingsForm.fname.label(class="form-invalid-label") }}
-                        {{ settingsForm.fname(class="form-invalid-input", placeholder=current_user.fname|capitalize) }}
+                        {{ settingsForm.fname(class="form-invalid-input", placeholder=current_user.fname|capitalize, autocomplete="off") }}
                         {% for error in settingsForm.fname.errors %}
                             <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
                         {% endfor %}
                     {% else %}
                         {{ settingsForm.fname.label(class="form-label") }}
-                        {{ settingsForm.fname(class="form-input", placeholder=current_user.fname|capitalize) }}
+                        {{ settingsForm.fname(class="form-input", placeholder=current_user.fname|capitalize, autocomplete="off") }}
                     {% endif %}
                 </li>
                 <!-- Last Name Field -->
                 <li>
                     {% if settingsForm.lname.errors %}
                         {{ settingsForm.lname.label(class="form-invalid-label") }}
-                        {{ settingsForm.lname(class="form-invalid-input", placeholder=current_user.lname|capitalize) }}
+                        {{ settingsForm.lname(class="form-invalid-input", placeholder=current_user.lname|capitalize, autocomplete="off") }}
                         {% for error in settingsForm.lname.errors %}
                             <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
                         {% endfor %}
                     {% else %}
                         {{ settingsForm.lname.label(class="form-label") }}
-                        {{ settingsForm.lname(class="form-input", placeholder=current_user.lname|capitalize) }}
+                        {{ settingsForm.lname(class="form-input", placeholder=current_user.lname|capitalize, autocomplete="off") }}
                     {% endif %}
                 </li>
                 <!-- Password Field -->
                 <li>
                     {% if settingsForm.password.errors %}
                         {{ settingsForm.password.label(class="form-invalid-label") }}
-                        {{ settingsForm.password(class="form-invalid-input") }}
+                        {{ settingsForm.password(class="form-invalid-input", autocomplete="off") }}
                         {% for error in settingsForm.password.errors %}
                             <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
                         {% endfor %}
                     {% else %}
                         {{ settingsForm.password.label(class="form-label") }}
-                        {{ settingsForm.password(class="form-input") }}
+                        {{ settingsForm.password(class="form-input", autocomplete="new-password") }}
                     {% endif %}
                 </li>
                 <!-- Confirm Password Field -->
                 <li>
                     {% if settingsForm.confirm_password.errors %}
                         {{ settingsForm.confirm_password.label(class="form-invalid-label") }}
-                        {{ settingsForm.confirm_password(class="form-invalid-input") }}
+                        {{ settingsForm.confirm_password(class="form-invalid-input", autocomplete="off") }}
                         {% for error in settingsForm.confirm_password.errors %}
                             <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
                         {% endfor %}
                     {% else %}
                         {{ settingsForm.confirm_password.label(class="form-label") }}
-                        {{ settingsForm.confirm_password(class="form-input") }}
+                        {{ settingsForm.confirm_password(class="form-input", autocomplete="new-password") }}
                     {% endif %}
                 </li>
                 <!-- Submit Field -->
