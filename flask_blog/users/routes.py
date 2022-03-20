@@ -1,9 +1,9 @@
 from flask_blog import mongo, bcrypt
 from flask import Blueprint, redirect, request, render_template, url_for, flash
-from flask_blog.users.forms import SignupForm, LoginForm, SettingsForm
+from flask_blog.users.forms import SignupForm, LoginForm, SettingsForm, RequestResetPassword, ResetPassword
 from flask_blog.models import User
 from datetime import datetime
-from flask_blog.users.utils import create_username, validate_settings
+from flask_blog.users.utils import create_username, send_reset_email, validate_settings, verify_reset_token
 from flask_blog.posts.utils import update_posts_data, update_post_data
 from flask_login import login_user, current_user, logout_user, login_required
 from bson import ObjectId
@@ -70,6 +70,48 @@ def signup():
     return render_template("signup.html", title="FlaskBlog Register",
                            form=form)
 
+
+@users.route("/reset-password", methods=["GET", "POST"])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+
+    form = RequestResetPassword()
+    
+    if form.validate_on_submit():
+        user = mongo.db.users.find_one({"email": form.email.data})
+        send_reset_email(user)
+        flash('An email has been sent to reset your password', "flash-success")
+        return redirect(url_for("users.login"))
+    
+    return render_template("reset_request.html", title="Reset Password", form=form)
+
+
+@users.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+    
+    user = verify_reset_token(token)
+    if user is None:
+        flash("That is an invalid or expired token", "danger")
+        return redirect(url_for("users.reset_request"))
+    
+    form = ResetPassword()
+    
+    if form.validate_on_submit():
+        # has password
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data).decode('utf-8')
+        
+        mongo.db.users.update_one(user, {"$set": {"password": hashed_password}})
+
+        flash("Your password has been updated!", "flash-success")
+        return redirect(url_for("users.login"))
+    
+    return render_template("reset_password.html", title="Reset Password", form=form)
+    
+    
 
 @users.route("/logout")
 @login_required

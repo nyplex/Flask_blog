@@ -1,9 +1,11 @@
-from flask import current_app, flash
-from flask_blog import mongo, bcrypt
+from flask import current_app, flash, url_for
+from flask_blog import mongo, bcrypt, mail
 from flask_login import current_user
 from flask_blog.models import User
 from PIL import Image
 from bson import ObjectId
+from flask_mail import Message
+from itsdangerous import TimedSerializer as Serializer
 import secrets
 import os
 
@@ -94,3 +96,32 @@ def validate_settings(form):
     current_user.update(upload_user)
 
     flash("Your profile has been uptaded!", "flash-success")
+
+
+def send_reset_email(user):
+    expires_sec = 1800
+    s = Serializer(current_app.config['SECRET_KEY'])
+    userID = str(user['_id'])
+
+    token = s.dumps({'user_id': userID})
+    
+    
+    msg = Message('Password Reset Request',
+                  sender='noreply@flaskblog.com', recipients=[user['email']])
+    
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('users.reset_password', token=token, _external=True)}
+    
+If you did not make this request, just ignore this email. 
+    '''
+    mail.send(msg)
+
+def verify_reset_token(token):
+    s = Serializer(current_app.config['SECRET_KEY'])
+    try:
+        user_id = s.loads(token)['user_id']
+    except:
+        return None
+
+    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    return user

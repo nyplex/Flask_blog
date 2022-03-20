@@ -81,6 +81,30 @@ class LoginForm(FlaskForm):
             flash("Wrong email and/or password", "flash-danger")
 
 
+class RequestResetPassword(FlaskForm):
+    email = StringField("Your email",
+                        validators=[DataRequired(), Email(), Length(max=50)],
+                        render_kw={"placeholder": "john.doe@email.com"})
+    submit = SubmitField("Reset Password")
+    
+    def validate_email(self, email):
+        user = mongo.db.users.find_one({"email": email.data})
+        if user is None:
+            raise ValidationError(
+                'This email does not exists in our database.')
+
+class ResetPassword(FlaskForm):
+    password = PasswordField("Your password",
+                             validators=[DataRequired(),
+                                         Length(min=6, max=40)],
+                             render_kw={"placeholder": "••••••••"})
+    confirm_password = PasswordField("Confirm your password",
+                                     validators=[DataRequired(),
+                                                 EqualTo("password")],
+                                     render_kw={"placeholder": "••••••••"})
+    submit = SubmitField("Save New Password")
+
+
 class SettingsForm(FlaskForm):
     profile_pic = FileField("Update your avatar",
                             validators=[FileAllowed(["jpg", "jpeg", "png"])])

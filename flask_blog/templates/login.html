@@ -44,7 +44,7 @@
                     {{ form.remember.label(class="checkBox-label hover:cursor-pointer") }}
                 </div>
             </div>
-            <a href="#" class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
+            <a href="{{ url_for('users.reset_request') }}" class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Lost Password?</a>
         </div>
         <!-- Submit button -->
         {{ form.submit(class="primary-btn w-full font-medium  text-sm px-5 py-2.5 hover:cursor-pointer") }}
