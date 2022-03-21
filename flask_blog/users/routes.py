@@ -32,7 +32,7 @@ def login():
 
         flash("Wrong email or password", "flash-danger")
 
-    return render_template("login.html", title="FlaskBlog Login",
+    return render_template("login.html", page_title="FlaskBlog Login",
                            form=form)
 
 
@@ -67,7 +67,7 @@ def signup():
         flash("Thanks for registered with us! You are now logged in.", "flash-success")
         return redirect(url_for("main.home"))
 
-    return render_template("signup.html", title="FlaskBlog Register",
+    return render_template("signup.html", page_title="FlaskBlog Register",
                            form=form)
 
 
@@ -84,7 +84,7 @@ def reset_request():
         flash('An email has been sent to reset your password', "flash-success")
         return redirect(url_for("users.login"))
     
-    return render_template("reset_request.html", title="Reset Password", form=form)
+    return render_template("reset_request.html", page_title="Reset Password", form=form)
 
 
 @users.route("/reset-password/<token>", methods=["GET", "POST"])
@@ -109,7 +109,7 @@ def reset_password(token):
         flash("Your password has been updated!", "flash-success")
         return redirect(url_for("users.login"))
     
-    return render_template("reset_password.html", title="Reset Password", form=form)
+    return render_template("reset_password.html", page_title="Reset Password", form=form)
     
     
 
@@ -162,7 +162,7 @@ def profile(user_id, **category_id):
         countResult = f"" + str(len(list(mongo.db.posts.find({"author": ObjectId(user_id)}))))
         updated_post = update_posts_data(posts)
 
-    return render_template("profile.html", title="Profile",
+    return render_template("profile.html", page_title="Profile",
                            settingsForm=settingsForm, user=user,
                            postsCount=postsCount, posts=updated_post, 
                            liveSearchUser=user_id, 

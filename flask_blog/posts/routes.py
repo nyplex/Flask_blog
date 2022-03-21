@@ -256,16 +256,23 @@ def delete_comment(comment_id, post_id):
         return redirect(url_for("posts.single_post", post_id=post_id))
 
 
-@posts.route("/load-comments/<post_id>", methods=["GET", "POST"])
+@posts.route("/load-comments", methods=["GET", "POST"])
 @login_required
-def load_comments(post_id):
+def load_comments():
     
     json_docs = [] #data container
-
-    #Get comments fron DB
-    comments = mongo.db.comments.find(
-        {"post": ObjectId(post_id)}).sort("posted_date", -1)
-    dataLen = len(list(mongo.db.comments.find({"post": ObjectId(post_id)})))
+    
+    if request.method == "POST":
+        post_id = request.values.get('postID')
+        counter = int(request.values.get('c'))
+        if counter >= 1:
+            counter -= 1
+        limit = int(request.values.get('limit'))
+        #Get comments fron DB
+        comments = mongo.db.comments.find(
+            {"post": ObjectId(post_id)}).sort("posted_date", 1).skip(counter).limit(limit)
+        dataLen = len(list(mongo.db.comments.find({"post": ObjectId(post_id)}).skip(counter).limit(limit)))
+        total = len(list(mongo.db.comments.find({"post": ObjectId(post_id)})))
 
     #Update and format comments
     for comment in comments:
@@ -276,7 +283,8 @@ def load_comments(post_id):
     #Store the data to return
     result = {
         "result": json_docs,
-        "counts": dataLen
+        "counts": dataLen,
+        "total": total
     }
 
     return make_response(jsonify(result))
