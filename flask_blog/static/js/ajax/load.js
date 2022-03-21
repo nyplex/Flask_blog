@@ -33,17 +33,22 @@ $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
         },
         success: function (response) {
             // if counter is >= to the total of posts in the DB , no more post to load => update the loading btn
-            if(counter >= response.total) {
-                $("#loadingBtnContainer").html("<p class='text-white text-lg font-medium'>No more post to load</p>")
-            }else{
-                // populate the home page with new loaded posts
-                if(dataAttr == "posts") {
-                    populateHomePage(response.result)
-                }else if(dataAttr == "postUser"){
-                    populateUserPosts(response.result)
-                } else{
-                    populateCategories(response.result)
+            console.log(counter);
+            console.log(response.total);
+            if(counter + 5 >= response.total) {
+                if(dataAttr == "posts" || dataAttr == "postUser") {
+                    $("#loadingBtnContainer").html("<p class='text-white text-lg font-medium'>No more post to load</p>")
+                }else {
+                    $("#loadingBtnContainer").html("<p class='text-white text-lg font-medium'>No more category to load</p>")
                 }
+            }
+            // populate the home page with new loaded posts
+            if(dataAttr == "posts") {
+                populateHomePage(response.result)
+            }else if(dataAttr == "postUser"){
+                populateUserPosts(response.result)
+            } else{
+                populateCategories(response.result)
             }
         }
     })

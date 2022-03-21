@@ -46,7 +46,7 @@ def home(**category_id):
         countResult = f"" + str(len(list(mongo.db.posts.find())))
 
     return render_template("home.html",
-                           page_title="Home Page", active_link="home",
+                           page_title="Flask Blog", active_link="home",
                            settingsForm=settingsForm, posts=updated_post, 
                            data_category=data_category, 
                            liveSearchCategory=liveSearchCategory, 
