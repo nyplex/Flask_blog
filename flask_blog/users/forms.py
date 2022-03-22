@@ -111,9 +111,9 @@ class SettingsForm(FlaskForm):
     username = StringField("Change your username")
     fname = StringField("Change your first name")
     lname = StringField("Change your Last name")
-    password = PasswordField("Your password",
+    password = PasswordField("New password",
                              render_kw={"placeholder": "••••••••"})
-    confirm_password = PasswordField("Confirm your password",
+    confirm_password = PasswordField("Confirm new password",
                                      render_kw={"placeholder": "••••••••"}, 
                                      validators=[EqualTo("password")])
     settingsSubmit = SubmitField("Update profile")

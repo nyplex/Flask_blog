@@ -24,7 +24,11 @@ $("#commentsBtn").on("click", (e) => {
                 $("#loader").addClass("hidden")
                 populateComments(response)
                 if(counter + 2 > response.total) {
-                    $("#noMoreComment").removeClass("hidden")
+                    if(response.total <= 0) {
+                        $("#noMoreComment").addClass("hidden")
+                    }else{
+                        $("#noMoreComment").removeClass("hidden")
+                    }
                     $("#loadingBtnContainer").addClass("hidden")
                 }else{
                     $("#loadingText").text("View more comments")
@@ -59,8 +63,12 @@ $("#loadingCommentsBtn").on("click", (e) => {
             $("#loader").addClass("hidden")
             populateComments(response)
             if(counter + 3 > response.total) {
+                if(response.total <= 0) {
+                    $("#noMoreComment").addClass("hidden")
+                }else{
+                    $("#noMoreComment").removeClass("hidden")
+                }
                 $("#loadingBtnContainer").addClass("hidden")
-                $("#noMoreComment").removeClass("hidden")
             }
             
             $("#loadingText").text("View more comments")

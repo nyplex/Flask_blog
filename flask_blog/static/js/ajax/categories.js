@@ -7,14 +7,6 @@ export let populateCategories = (data) => {
     data.forEach(post => {
         //parse the JSON data into an obj
         post = JSON.parse(post)
-        // TODO get the html for each popular tags in each categories
-        // let tags = ""
-        // post.tags.forEach(tag => {
-        //     tags += `<span class="primary-tags"><i class="fa-solid fa-hashtag"></i>${tag}</span>`
-        // });
-
-        // Capitalize the category of the post 
-        //let category = post.category_name.trim().replace(/^\w/, (c) => c.toUpperCase())
         // declare html conttent of the post
         html += `
         <a href="/categories/${post._id.$oid}" class="p-6 w-[30%] min-w-[290px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700">
@@ -24,14 +16,6 @@ export let populateCategories = (data) => {
             </div>
             <div>
                 <p class="my-3 font-normal text-gray-700 dark:text-gray-400">${post.description}</p>
-            </div>
-            <div>
-                <span class="dark:text-gray-300 text-gray-500 font-medium text-md mb-2">Popular Tags</span>
-                <div>
-                    <span class="primary-tags"><i class="fa-solid fa-hashtag"></i>tags1</span>
-                    <span class="primary-tags"><i class="fa-solid fa-hashtag"></i>tags2</span>
-                    <span class="primary-tags"><i class="fa-solid fa-hashtag"></i>tags3</span>
-                </div>
             </div>
         </a>
         `
