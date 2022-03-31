@@ -1,12 +1,14 @@
 from calendar import c
-from flask import Blueprint, redirect, request, render_template, jsonify, make_response, current_app, url_for
+from flask import Blueprint, redirect, request, render_template, jsonify, make_response, current_app, url_for, flash
 from flask_blog import mongo
 from flask_blog.users.forms import SettingsForm
 from flask_blog.users.utils import validate_settings
 from flask_blog.posts.utils import update_posts_data, update_post_data
+from flask_blog.posts.forms import NewCategoryForm
 from bson import ObjectId, json_util
-from flask_login import login_required
+from flask_login import login_required, current_user
 import json
+import random
 
 main = Blueprint("main", __name__)
 
@@ -23,7 +25,6 @@ def home(**category_id):
             return redirect(url_for("main.home", category_id=category_id))
         else:
             return redirect(url_for("main.home"))
-        
 
     # Load posts by category
     if category_id:
@@ -32,7 +33,9 @@ def home(**category_id):
         posts = mongo.db.posts.find({"category": ObjectId(category_id['category_id'])}).sort(
             "posted_date", -1).limit(5)
         data_category = category["category_name"]
-        countResult = f"" + str(len(list(mongo.db.posts.find({"category": ObjectId(category_id['category_id'])}))))
+        countResult = f"" + \
+            str(len(list(mongo.db.posts.find(
+                {"category": ObjectId(category_id['category_id'])}))))
         liveSearchCategory = category["_id"]
         updated_post = update_posts_data(posts)
 
@@ -47,9 +50,9 @@ def home(**category_id):
 
     return render_template("home.html",
                            page_title="Flask Blog", active_link="home",
-                           settingsForm=settingsForm, posts=updated_post, 
-                           data_category=data_category, 
-                           liveSearchCategory=liveSearchCategory, 
+                           settingsForm=settingsForm, posts=updated_post,
+                           data_category=data_category,
+                           liveSearchCategory=liveSearchCategory,
                            countResult=countResult, category=category)
 
 
@@ -59,14 +62,58 @@ def categories():
 
     categories = mongo.db.categories.find().sort("category_name", 1).limit(6)
     settingsForm = SettingsForm()
+    newCategoryForm = NewCategoryForm()
 
-    if settingsForm.validate_on_submit():
-        validate_settings(settingsForm)
-        return redirect(url_for("main.categories"))
+    if request.method == "POST":
+
+        # validata the new category form
+        if "newCategorySubmit" in request.form and newCategoryForm.validate_on_submit():
+            colors = ["yellow", "purple", "pink", "orange", "red", "cyan", "amber",
+                      "indigo", "violet", "sky", "emerald", "lime", "teal", "gray"]
+            rdmColor = random.choice(colors)
+            mongo.db.categories.insert_one({
+                "category_name": newCategoryForm.categoryName.data,
+                "category_color": rdmColor,
+                "count": 0,
+                "description": newCategoryForm.categoryDescription.data
+            })
+            # save the the new category in DB
+
+            flash("New Topic successfully posted!", "flash-success")
+            return redirect(url_for("main.categories"))
+
+        # validate the settings form
+        elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
+            validate_settings(settingsForm)
+            return redirect(url_for("main.categories"))
+
+        # if one of the forms is not valid throw an error flash message
+        else:
+            flash("There is an error in the form", "flash-danger")
 
     return render_template("categories.html",
                            page_title="Categories", active_link="categories",
-                           settingsForm=settingsForm, categories=categories)
+                           settingsForm=settingsForm, categories=categories,
+                           newCategoryForm=newCategoryForm)
+
+
+@main.route("/delete-categories/<category_id>", methods=["GET", "POST"])
+@login_required
+def delete_categories(category_id):
+    # Get post and comment from DB
+    category = mongo.db.categories.find_one({'_id': ObjectId(category_id)})
+
+    # Check if user is authorized to delete the comment
+    if current_user.username == "admin":
+        mongo.db.categories.delete_one({"_id": ObjectId(category_id)})
+        mongo.db.posts.delete_many({"category": ObjectId(category_id)})
+        flash("Category Deleted!", "flash-success")
+        return redirect(url_for("main.categories"))
+
+    # throw a flash message if user is not authorized to delete the comment and redirect to the post
+    else:
+        flash("You are not authorized to delete a category!", "flash-danger")
+        return redirect(url_for("main. "))
 
 
 @main.route("/load", methods=["GET"])
@@ -81,7 +128,7 @@ def load_data():
         counter = int(request.args.get("c"))
         collection = str(request.args.get("coll"))
         userID = request.args.get("userid")
-        
+
         # check if to load posts content
         if collection == "posts":
             category = str(request.args.get("category"))
@@ -100,13 +147,14 @@ def load_data():
                     {"category": ObjectId(categoryId["_id"])})))
                 datas = mongo.db.posts.find({"category": ObjectId(categoryId["_id"])}).skip(
                     limit).sort("posted_date", -1).skip(counter).limit(limit)
-                
+
         elif collection == "postUser":
             category = str(request.args.get("category"))
 
             # load all posts
             if category == "multi":
-                dataLen = len(list(mongo.db.posts.find({"author": ObjectId(userID)})))
+                dataLen = len(list(mongo.db.posts.find(
+                    {"author": ObjectId(userID)})))
                 datas = mongo.db.posts.find({"author": ObjectId(userID)}).skip(limit).sort(
                     "posted_date", -1).skip(counter).limit(limit)
 
@@ -135,9 +183,15 @@ def load_data():
             json_doc = json.dumps(dataArray, default=json_util.default)
             json_docs.append(json_doc)
 
+            if current_user.username == "admin":
+                delete = True
+            else:
+                delete = False
+
         result = {
             "result": json_docs,
-            "total": dataLen
+            "total": dataLen,
+            "delete": delete
         }
 
     return make_response(jsonify(result))
@@ -174,7 +228,8 @@ def live_search():
                 if data == "":
                     posts = mongo.db.posts.find({"category": ObjectId(liveSearchCategory)}).sort(
                         "posted_date", -1).limit(limit)
-                    dataLen = len(list(mongo.db.posts.find({"category": ObjectId(liveSearchCategory)})))
+                    dataLen = len(list(mongo.db.posts.find(
+                        {"category": ObjectId(liveSearchCategory)})))
                 else:
                     posts = mongo.db.posts.find({"title": {"$regex": data, "$options": 'i'}, "category": ObjectId(
                         liveSearchCategory)}).sort("posted_date", -1).limit(limit)
@@ -189,7 +244,8 @@ def live_search():
                 if data == "":
                     posts = mongo.db.posts.find({"author": ObjectId(liveSearchUser)}).sort(
                         "posted_date", -1).limit(limit)
-                    dataLen = len(list(mongo.db.posts.find({"author": ObjectId(liveSearchUser)})))
+                    dataLen = len(list(mongo.db.posts.find(
+                        {"author": ObjectId(liveSearchUser)})))
                 else:
                     posts = mongo.db.posts.find({"title": {"$regex": data, "$options": 'i'}, 'author': ObjectId(
                         liveSearchUser)}).sort("posted_date", -1).limit(limit)
@@ -213,7 +269,7 @@ def live_search():
             dataArray = update_post_data(data)
             json_doc = json.dumps(dataArray, default=json_util.default)
             json_docs.append(json_doc)
-        
+
         response = {
             "data": json_docs,
             "total": dataLen

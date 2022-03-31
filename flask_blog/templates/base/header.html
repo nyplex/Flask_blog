@@ -43,7 +43,9 @@
                     <!-- User Menu Personnal Info -->
                     <div class="py-3 px-4">
                         <span class="block text-sm text-gray-900 dark:text-white">
-                            {{ current_user.fname|capitalize }} {{ current_user.lname|capitalize }}
+                            {% if current_user.is_authenticated and current_user.username != "admin" %}
+                                {{ current_user.fname|capitalize }} {{ current_user.lname|capitalize }}
+                            {% endif %}
                         </span>
                         <span
                             class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">{{ current_user.email }}</span>
@@ -51,9 +53,11 @@
                     <!-- User Menu Links -->
                     <ul class="py-1" aria-labelledby="dropdown">
                         <li><a href="{{ url_for('users.profile', user_id=current_user._id) }}" class="user-link">Profile</a></li>
-                        <li>
-                            <button class="user-link w-full text-left" id="settings_btn">Settings</button>
-                        </li>
+                        {% if current_user.is_authenticated and current_user.username != "admin" %}
+                            <li>
+                                <button class="user-link w-full text-left" id="settings_btn">Settings</button>
+                            </li>
+                        {% endif %}
                         <li><a href="{{ url_for('users.logout') }}" class="user-link-danger">Log Out</a></li>
                     </ul>
                 </div>

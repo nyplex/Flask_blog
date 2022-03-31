@@ -98,10 +98,12 @@
             </div>
             
             <!-- If post if from current_user show EDIT/DELETE btn -->
-            {% if current_user._id == post['author']._id %}
+            {% if current_user._id == post['author']._id  or current_user.username == "admin" %}
                 <div class="flex flex-row justify-between gap-2">
                     <!-- <button class="primary-btn py-1.5 px-2.5">EDIT POST</button> -->
-                    <a href="{{ url_for('posts.edit_post', post_id=post['_id']) }}" class="primary-btn py-1.5 px-2.5">EDIT POST</a>
+                    {% if current_user._id == post['author']._id %}
+                        <a href="{{ url_for('posts.edit_post', post_id=post['_id']) }}" class="primary-btn py-1.5 px-2.5">EDIT POST</a>
+                    {% endif %}
                     <!-- <button class="danger-btn py-1.5 px-2.5">DELETE POST</button> -->    
                     <button data-modal-toggle="deletePost-modal" class="danger-btn py-1.5 px-2.5">DELETE POST</button>
                 </div>
@@ -129,7 +131,7 @@
 </div>
 
 <!-- Comments Container -->
-<div class="max-w-7xl mx-auto mobile:mb-12 mb-2 rounded-lg hidden scrollbar" id="commentsContainer"> </div>
+<div class="max-w-7xl mx-auto mobile:mb-12 mb-2 rounded-lg hidden scrollbar" id="commentsContainer"></div>
 
 <!-- Load more comments btn -->
 <div class="mx-auto mobile:mb-12 mb-4 w-auto text-center hidden" id="loadingBtnContainer">

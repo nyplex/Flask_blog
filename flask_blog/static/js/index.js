@@ -64,3 +64,11 @@ themeToggleBtn.addEventListener('click', function() {
         }
     } 
 })
+
+
+//Delete category
+$("*[data-deletecategory]").on("click", (e) => {
+    let data = $(e.target).data("deletecategoryid")
+    let url = `/delete-categories/${data}`
+    $("#deleteCategoryBtn").attr("href", url)
+})

@@ -33,8 +33,6 @@ $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
         },
         success: function (response) {
             // if counter is >= to the total of posts in the DB , no more post to load => update the loading btn
-            console.log(counter);
-            console.log(response.total);
             if(counter + 5 >= response.total) {
                 if(dataAttr == "posts" || dataAttr == "postUser") {
                     $("#loadingBtnContainer").html("<p class='text-white text-lg font-medium'>No more post to load</p>")
@@ -48,7 +46,7 @@ $("#loadingBtn, #loadingBtnCategories").on("click", (e) => {
             }else if(dataAttr == "postUser"){
                 populateUserPosts(response.result)
             } else{
-                populateCategories(response.result)
+                populateCategories(response)
             }
         }
     })

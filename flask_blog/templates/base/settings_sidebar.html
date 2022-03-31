@@ -1,4 +1,4 @@
-{% if current_user.is_authenticated %}
+{% if current_user.is_authenticated and current_user.username != "admin" %}
 <aside class="hidden w-full mobile:w-auto fixed top-[61px] right-0 z-40 max-h-[100vh] content-area overflow-y-scroll scrollbar" aria-label="Sidebar" id="settings_sidebar">
     <div class="px-6 mobile:py-4 py-2 overflow-y-auto rounded-bl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 border-l-2 border-b-2 shadow-md">
         <!-- Form Title -->
