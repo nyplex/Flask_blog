@@ -155,6 +155,7 @@ def edit_post(post_id):
             #Edit the post and save it
             edit_db_post(editTopicForm, post_id)
             flash("Edtit sucess", "flash-success")
+            return redirect(url_for("posts.single_post", post_id=post_id))
 
         #validate the settings form
         elif "settingsSubmit" in request.form and settingsForm.validate_on_submit():
@@ -199,7 +200,7 @@ def delete_post(post_id):
     update_post_data(post)
     
     # if user is NOT authorized to delete the post
-    if post['author']['_id'] != current_user._id:
+    if post['author']['_id'] != current_user._id and current_user.fname != "admin":
         return redirect(url_for("posts.single_post", post_id=post_id))
 
     # delete post
@@ -246,7 +247,7 @@ def delete_comment(comment_id, post_id):
     post = mongo.db.posts.find_one({"_id": ObjectId(post_id)})
 
     #Check if user is authorized to delete the comment
-    if comment['author'] == current_user._id or post['author'] == current_user._id:
+    if comment['author'] == current_user._id or post['author'] == current_user._id or current_user.username == "admin":
         mongo.db.comments.delete_one({"_id": ObjectId(comment_id)})
         return make_response("deleted")
     

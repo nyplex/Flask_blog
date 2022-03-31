@@ -59,3 +59,15 @@ class NewCommentForm(FlaskForm):
         max=5000)], render_kw={"placeholder": "Write your comment here..."})
     
     newCommentSubmit = SubmitField("Comment!")
+    
+
+class NewCategoryForm(FlaskForm):
+    categoryName = StringField("Cagegory Name",
+                             validators=[DataRequired(),
+                                         Length(min=3, max=50)],
+                             render_kw={"placeholder": "The name of your category"})
+    
+    categoryDescription = TextAreaField('Category Description', validators=[DataRequired(), Length(
+        max=500)], render_kw={"placeholder": "Write your description here..."})
+    
+    newCategorySubmit = SubmitField("Add Category!")

@@ -168,7 +168,7 @@ def update_comments_data(comments):
         comment["posted_date"] = format_post_date(comment["posted_date"])
         post = mongo.db.posts.find_one({"_id": ObjectId(comment['post'])})
         
-        if comment['author']['_id'] == current_user._id or post['author'] == current_user._id:
+        if comment['author']['_id'] == current_user._id or post['author'] == current_user._id or current_user.username == "admin":
             comment["delete"] = True
         else:
             comment["delete"] = False

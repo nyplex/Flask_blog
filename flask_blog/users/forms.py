@@ -170,5 +170,6 @@ class SettingsForm(FlaskForm):
     
     def validate_profile_pic(self, profile_pic):
         max_bytes = 2*1024*1024
-        if len(profile_pic.data.read()) > max_bytes:
-            raise ValidationError(f"File size must be less than 2MB")
+        if profile_pic.data is not None:
+            if len(profile_pic.data.read()) > max_bytes:
+                raise ValidationError(f"File size must be less than 2MB")
