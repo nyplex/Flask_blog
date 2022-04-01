@@ -71,15 +71,30 @@ def categories():
             colors = ["yellow", "purple", "pink", "orange", "red", "cyan", "amber",
                       "indigo", "violet", "sky", "emerald", "lime", "teal", "gray"]
             rdmColor = random.choice(colors)
+            category_name = newCategoryForm.categoryName.data
+            category_description = newCategoryForm.categoryDescription.data
             mongo.db.categories.insert_one({
-                "category_name": newCategoryForm.categoryName.data,
+                "category_name": category_name.lower(),
                 "category_color": rdmColor,
                 "count": 0,
-                "description": newCategoryForm.categoryDescription.data
+                "description": category_description.capitalize()
             })
             # save the the new category in DB
 
-            flash("New Topic successfully posted!", "flash-success")
+            flash("New Category successfully created!", "flash-success")
+            return redirect(url_for("main.categories"))
+
+        # validate the edit category form
+        elif "editCategorySubmit" in request.form and newCategoryForm.validate_on_submit():
+            category_id = request.form.get('editCategoryID')
+            category = mongo.db.categories.find_one({"_id": ObjectId(request.form.get('editCategoryID'))})
+            
+            mongo.db.categories.update_one({"_id": ObjectId(category_id)}, {"$set": {
+                "category_name": newCategoryForm.categoryName.data,
+                "description": newCategoryForm.categoryDescription.data
+            }})
+            
+            flash("Category successfully edited!", "flash-success")
             return redirect(url_for("main.categories"))
 
         # validate the settings form
