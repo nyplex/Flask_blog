@@ -68,11 +68,13 @@ def categories():
 
         # validata the new category form
         if "newCategorySubmit" in request.form and newCategoryForm.validate_on_submit():
+            
             colors = ["yellow", "purple", "pink", "orange", "red", "cyan", "amber",
                       "indigo", "violet", "sky", "emerald", "lime", "teal", "gray"]
             rdmColor = random.choice(colors)
             category_name = newCategoryForm.categoryName.data
             category_description = newCategoryForm.categoryDescription.data
+            
             mongo.db.categories.insert_one({
                 "category_name": category_name.lower(),
                 "category_color": rdmColor,
@@ -87,7 +89,6 @@ def categories():
         # validate the edit category form
         elif "editCategorySubmit" in request.form and newCategoryForm.validate_on_submit():
             category_id = request.form.get('editCategoryID')
-            category = mongo.db.categories.find_one({"_id": ObjectId(request.form.get('editCategoryID'))})
             
             mongo.db.categories.update_one({"_id": ObjectId(category_id)}, {"$set": {
                 "category_name": newCategoryForm.categoryName.data,
