@@ -12,7 +12,7 @@ export let populateCategories = (response) => {
         // declare html conttent of the post
         if(response.delete == true) {
             adminBtn = `<div class="flex flex-row justify-end gap-x-4">
-                            <button data-editcategory data-editcategorytitle="${post['category_name']}" data-editcategorybody="${post.description}" class="text-blue-500">Edit</button>
+                            <button data-editcategory data-editcategoryid="${post._id.$oid}" data-editcategorytitle="${post['category_name']}" data-editcategorybody="${post.description}" class="text-blue-500">Edit</button>
                             <button data-deletecategory data-deletecategoryid="${post._id.$oid}" class="text-red-500" type="button" data-modal-toggle="deleteCategory-modal">Delete</button>
                         </div>`
         }else{
@@ -33,6 +33,8 @@ export let populateCategories = (response) => {
 
 
     });
+    $("*[data-deletecategory]").off()
+    $("*[data-editCategory]").off()
     //Append the html content of each post to the main table container
     $("#categoriesContainer").append(html)
     //Update the state of the loading btn
@@ -47,5 +49,16 @@ export let populateCategories = (response) => {
         let data = $(e.target).data("deletecategoryid")
         let url = `/delete-categories/${data}`
         $("#deleteCategoryBtn").attr("href", url)
+    })
+    //Edit Category
+    $("*[data-editCategory]").on("click", (e) => {
+        toggleModal('editCategory-modal', true)
+        let title = $(e.target).data("editcategorytitle")
+        let description = $(e.target).data("editcategorybody")
+        let categoryID = $(e.target).data("editcategoryid")
+        
+        $("#EditformCategoryName").val(title)
+        $("#EditformCategoryDescription").val(description)
+        $("#editCategoryID").val(categoryID)
     })
 }

@@ -72,3 +72,14 @@ $("*[data-deletecategory]").on("click", (e) => {
     let url = `/delete-categories/${data}`
     $("#deleteCategoryBtn").attr("href", url)
 })
+
+//Edit Category
+$("*[data-editCategory]").on("click", (e) => {
+    let title = $(e.target).data("editcategorytitle")
+    let description = $(e.target).data("editcategorybody")
+    let categoryID = $(e.target).data("editcategoryid")
+    
+    $("#EditformCategoryName").val(title)
+    $("#EditformCategoryDescription").val(description)
+    $("#editCategoryID").val(categoryID)
+})

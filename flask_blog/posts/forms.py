@@ -71,3 +71,4 @@ class NewCategoryForm(FlaskForm):
         max=500)], render_kw={"placeholder": "Write your description here..."})
     
     newCategorySubmit = SubmitField("Add Category!")
+    editCategorySubmit = SubmitField("Edit Category!")

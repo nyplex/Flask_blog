@@ -30,7 +30,7 @@
             </a>
             {% if current_user.username == "admin" %}
                 <div class="flex flex-row justify-end gap-x-4">
-                    <button data-editcategory data-editcategorytitle="{{category.category_name}}" data-editcategorybody="{{category.description}}" class="text-blue-500">Edit</button>
+                    <button data-editcategory data-editcategoryid="{{category._id}}" data-editcategorytitle="{{category.category_name}}" data-editcategorybody="{{category.description}}" class="text-blue-500" data-modal-toggle="editCategory-modal">Edit</button>
                     <button data-deletecategory data-deletecategoryid="{{category._id}}" class="text-red-500" type="button" data-modal-toggle="deleteCategory-modal">Delete</button>
                 </div>
             {% endif %}
@@ -91,7 +91,7 @@
             <!-- Modal body -->
             <form class="px-6 pb-4 lg:px-8 sm:pb-6 xl:pb-8" action="#" method="POST" id="categoryForm"">
                 {{ newCategoryForm.csrf_token(id = "unique_id") }}
-                <h3 class="text-2xl mb-4 font-medium text-gray-900 dark:text-white pl-2">Add a comment</h3>
+                <h3 class="text-2xl mb-4 font-medium text-gray-900 dark:text-white pl-2">Add a category</h3>
                 <div>
                     <div class="mb-4">
                         {% if newCategoryForm.categoryName.errors %}
@@ -116,6 +116,54 @@
                     <!-- Submit & Cancel form -->
                     <div class="mt-4 flex flex-row mobile:justify-end justify-center">
                         {{ newCategoryForm.newCategorySubmit(class="primary-btn px-3 py-2.5") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Category Modal -->
+<div id="editCategory-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full">
+    <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex justify-end p-2">
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="editCategory-modal">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form class="px-6 pb-4 lg:px-8 sm:pb-6 xl:pb-8" action="#" method="POST" id="categoryForm"">
+                {{ newCategoryForm.csrf_token(id = "unique_id") }}
+                <input type="hidden" value="" id="editCategoryID" name="editCategoryID">
+                <h3 class="text-2xl mb-4 font-medium text-gray-900 dark:text-white pl-2">Edit a category</h3>
+                <div>
+                    <div class="mb-4">
+                        {% if newCategoryForm.categoryName.errors %}
+                        {{ newCategoryForm.categoryName(class="form-invalid-input", rows="6", id="EditformCategoryName") }}
+                        {% for error in newCategoryForm.categoryName.errors %}
+                            <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                        {% endfor %}
+                        {% else %}
+                            {{ newCategoryForm.categoryName(class="form-input ", rows="6", id="EditformCategoryName") }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        {% if newCategoryForm.categoryDescription.errors %}
+                        {{ newCategoryForm.categoryDescription(class="form-invalid-input", rows="6", id="EditformCategoryDescription") }}
+                        {% for error in newCategoryForm.categoryDescription.errors %}
+                            <p class="form-error-message max-w-full"><span class="font-medium">Oops! </span>{{ error }}</p>
+                        {% endfor %}
+                        {% else %}
+                            {{ newCategoryForm.categoryDescription(class="form-input ", rows="6", id="EditformCategoryDescription") }}
+                        {% endif %}
+                    </div>
+                    <!-- Submit & Cancel form -->
+                    <div class="mt-4 flex flex-row mobile:justify-end justify-center">
+                        {{ newCategoryForm.editCategorySubmit(class="primary-btn px-3 py-2.5") }}
                     </div>
                 </div>
             </form>
