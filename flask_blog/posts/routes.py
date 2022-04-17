@@ -68,6 +68,10 @@ def single_post(post_id):
     if request.method == "POST":
         #validate the settings form
         if "settingsSubmit" in request.form and settingsForm.validate_on_submit():
+            files = request.files.getlist('f[]')
+            for f in files:
+                print(len(f.read()))
+
             validate_settings(settingsForm)
             return redirect(url_for("posts.single_post", post_id=post_id))
 

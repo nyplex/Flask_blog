@@ -1,5 +1,5 @@
 from flask import current_app, flash, url_for
-from flask_blog import mongo, bcrypt, mail
+from flask_blog import mongo, bcrypt, mail, aws3
 from flask_login import current_user
 from flask_blog.models import User
 from PIL import Image
@@ -8,6 +8,7 @@ from flask_mail import Message
 from itsdangerous import TimedSerializer as Serializer
 import secrets
 import os
+import boto3
 
 
 def create_username(fname, lname):
@@ -32,31 +33,50 @@ def create_username(fname, lname):
 
 
 def save_picture(form_picture, type):
-    # generate random key
+    # generate random file name 
     random_hex = secrets.token_hex(8)
-    # get the picture file name
-    _, f_ext = os.path.splitext(form_picture.filename)
-    # concat. random key + pic. file extension
+    _, f_ext = os.path.splitext(form_picture.data.filename)
     picture_fn = random_hex + f_ext
+    
     # save the picture
     if type == "profile":
         picture_path = os.path.join(
             current_app.root_path, 'static/media/profile_pics', picture_fn)
-        # delete previous user's pic BUT not the default img
-        if current_user["image"] != "default.jpg":
-            os.remove(os.path.join(current_app.root_path,
-                      'static/media/profile_pics', current_user["image"]))
+
         output_size = (300, 300)
-        i = Image.open(form_picture)
+        i = Image.open(form_picture.data)
         i.thumbnail(output_size)
         i.save(picture_path)
+        
+        
+        acl="public-read" 
+        dest = f'static/media/profile_pics/{picture_fn}'
+        # #aws3.upload_fileobj(form_picture.data, 'nyplex-flask-blog',dest, ExtraArgs={ "ACL": acl, "ContentType": form_picture.data.content_type})
+        
+        with open(picture_path, "rb") as f:
+            aws3.upload_fileobj(f, "nyplex-flask-blog", dest)
+        
+        if os.path.exists(picture_path):
+            os.remove(picture_path)
+        
+
         return picture_fn
 
     elif type == "postImage":
         picture_path = os.path.join(
             current_app.root_path, 'static/media/posts/pictures', picture_fn)
-        i = Image.open(form_picture)
+        i = Image.open(form_picture.data)
         i.save(picture_path)
+        acl="public-read" 
+        dest = f'static/media/posts/pictures/{picture_fn}'
+        # aws3.upload_fileobj(form_picture.data, 'nyplex-flask-blog',dest, ExtraArgs={ "ACL": acl, "ContentType": form_picture.data.content_type} )
+        
+        with open(picture_path, "rb") as f:
+            aws3.upload_fileobj(f, "nyplex-flask-blog", dest)
+        
+        if os.path.exists(picture_path):
+            os.remove(picture_path)
+        
         return "pictures/" + picture_fn
 
 
@@ -85,7 +105,7 @@ def validate_settings(form):
             "password": password
         })
     if form.profile_pic.data:
-        filename = save_picture(form.profile_pic.data, "profile")
+        filename = save_picture(form.profile_pic, "profile")
         upload_user.update({
             "image": filename
         })
