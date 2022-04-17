@@ -64,7 +64,7 @@ def saveNewTopic(form):
         # get the file extension
         _, f_ext = os.path.splitext(postMedia.filename)
         if f_ext in [".png", ".jpg", ".jpeg"]:
-            filename = save_picture(form.topicMedia.data, "postImage")
+            filename = save_picture(form.topicMedia, "postImage")
         else:
             filename = saveTopicVideo(form.topicMedia.data)
     else:
