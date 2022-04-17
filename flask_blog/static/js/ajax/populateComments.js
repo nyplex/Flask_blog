@@ -28,7 +28,7 @@ export let populateComments = (response) => {
                 <div class="flex flex-row justify-between">
                     <div class="flex flex-row justify-left items-center">
                         <!-- Author Avatar -->
-                        <img class="rounded-full mr-4 w-10 h-10" src="/static/media/profile_pics/${comment.author.image}" alt="">
+                        <img class="rounded-full mr-4 w-10 h-10" src="https://nyplex-flask-blog.s3.amazonaws.com/static/media/profile_pics/${comment.author.image}" alt="">
                         <div class="flex flex-col w-full space-y-2">
                             <!-- Topic Title -->
                             <a href="/profile/${comment.author._id.$oid}" class="navbar-unactive-link text-lg font-medium">@${comment['author']['username']}</a>
@@ -61,7 +61,7 @@ export let appendNewComment = (response) => {
                 <div class="flex flex-row justify-between">
                     <div class="flex flex-row justify-left items-center">
                         <!-- Author Avatar -->
-                        <img class="rounded-full mr-4 w-10 h-10" src="/static/media/profile_pics/${comment.author.image}" alt="">
+                        <img class="rounded-full mr-4 w-10 h-10" src="https://nyplex-flask-blog.s3.amazonaws.com/static/media/profile_pics/${comment.author.image}" alt="">
                         <div class="flex flex-col w-full space-y-2">
                             <!-- Topic Title -->
                             <a href="/profile/${comment.author._id.$oid}" class="navbar-unactive-link text-lg font-medium">@${comment['author']['username']}</a>

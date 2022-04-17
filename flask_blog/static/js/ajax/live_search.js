@@ -64,7 +64,7 @@ export let populateLiveSearch = (data) => {
                 <td class="py-4 px-2 text-sm font-medium text-gray-900 dark:text-white text-center">
                     <div class="flex flex-row justify-left items-center">
                         <!-- Author Avatar -->
-                        <img class="rounded-full mr-4 w-10 h-10" src="/static/media/profile_pics/${post.author.image}" alt="">
+                        <img class="rounded-full mr-4 w-10 h-10" src="https://nyplex-flask-blog.s3.amazonaws.com/static/media/profile_pics/${post.author.image}" alt="">
                         <div class="flex flex-col w-full space-y-2">
                             <!-- Topic Title -->
                             <a href="/posts/${post._id.$oid}" class="text-left hover:text-blue-700 text-lg">${post.title}</a>
